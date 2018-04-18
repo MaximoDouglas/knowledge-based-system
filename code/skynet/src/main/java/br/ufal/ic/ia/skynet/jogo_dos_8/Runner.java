@@ -4,41 +4,43 @@ import java.util.List;
 import java.util.Stack;
 
 public class Runner {
-	static int iCounter = 0;
-	static final int limite = 10000;
+	private static int iCounter = 0;
+	private static int limite = 0;
+	private static int pCounter = 0;
+	private static boolean found = false;
 
 	public static void main(String[] args) {
 		State firstState = new State();
-		
-		for (int i = 0; i < 9; i++) {
 
-			System.out.print("[");
-			firstState.config = newConfig(i);
-			System.out.print("]");
+		System.out.print("Configuração:	");
+		System.out.print("[");
+		firstState.config = newConfig2();			
+		System.out.print("]");
 
-			System.out.println("\n");
+		System.out.println("\n");
 
-			System.out.println("BFS: ");
-			BFS(firstState);
-			System.out.println();
+		System.out.println("BFS: ");
+		BFS(firstState);
+		System.out.println();
 
-			State.resetHash();
-			iCounter = 0;
+		State.resetHash();
+		iCounter = 0;
 
-			System.out.println("DFS: ");
-			DFS(firstState);
-			System.out.println();
+		System.out.println("DFS: ");
+		DFS(firstState);
+		System.out.println();
 
-			State.resetHash();
-			iCounter = 0;
+		State.resetHash();
+		iCounter = 0;
 
-			System.out.println("DFS ITERATIVO - Limite: 10k");
+		while(!found) {
+			System.out.println("DFS iterativo - Limite inicial: "+ limite);
 			DFS_profundidade_iterativa(firstState);
-			System.out.println("---------------------------");
 			System.out.println();
-
+			limite = limite + 1000;
 			State.resetHash();
 			iCounter = 0;
+			pCounter = 0;
 		}
 	}
 
@@ -48,58 +50,49 @@ public class Runner {
 		stack.push(state);
 
 		while (!stack.isEmpty()) {
-			iCounter++;
-			State t = stack.pop();
 
+			State t = stack.pop();
 			if (!t.verifyState()) {
-				if (!t.exists()) {
-					List<State> ts = State.newState(t);
-					ts.forEach(s -> stack.push(s));
-				}
+				List<State> ts = State.newState(t);
+				ts.forEach(s -> {if (!s.exists()) {
+					iCounter++;
+					stack.push(s);}});
 
 			} else {
-				System.out.println("	"+iCounter);
+				System.out.println("Iterações:	"+iCounter);
 			}
 		}
 	}
 
 	public static void DFS(State state) {
-		iCounter++;
 
 		if (!state.verifyState()) {
-			if (!state.exists()) {
-				List<State> ts = State.newState(state);
-				ts.forEach(s -> DFS(s));
-			}
+
+			List<State> ts = State.newState(state);
+			ts.forEach(s -> {if (!s.exists()) {
+				iCounter++;
+				DFS(s);}});
 
 		} else {
-			System.out.println("	"+iCounter);
+			System.out.println("Iterações:	"+iCounter);
 		}
 	}
 
 	public static void DFS_profundidade_iterativa(State state) {
-		iCounter++;
-		
-		if (!state.verifyState()) {
-			if (!state.exists()) {
-				List<State> ts = State.newState(state);
-				if (iCounter <= limite) {
-					ts.forEach(s -> {
-						iCounter++; 
-						DFS_profundidade_iterativa(s);
-					});
-				} else {
-					iCounter--;
-					return;
-				}
-			} else {
 
-				iCounter--;
-				return;
-			}
+		if (!state.verifyState()) {
+			List<State> ts = State.newState(state);
+			ts.forEach(s -> {if (!s.exists() && pCounter < limite) {
+				iCounter++;
+				pCounter++;
+				DFS_profundidade_iterativa(s);
+			} else if (pCounter == limite) {
+				pCounter--;
+			}});
 		} else {
-			System.out.println("	"+iCounter);
-			iCounter--;
+			System.out.println("Profundidade:	"+pCounter);
+			System.out.println("Iterações:	"+iCounter);
+			found = true;
 		}
 	}
 
@@ -124,6 +117,29 @@ public class Runner {
 					System.out.print(" ");
 				}
 				count++;
+			}
+		}
+
+		return config;
+
+	}
+
+	public static int[][] newConfig2() {
+		int[][] config = new int[3][3];
+
+		config[0][0] = 5;
+		config[0][1] = 2;
+		config[0][2] = 8;
+		config[1][0] = 4;
+		config[1][1] = 1;
+		config[1][2] = 7;
+		config[2][0] = 0;
+		config[2][1] = 3;
+		config[2][2] = 6;
+
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+				System.out.print(config[i][j]);
 			}
 		}
 

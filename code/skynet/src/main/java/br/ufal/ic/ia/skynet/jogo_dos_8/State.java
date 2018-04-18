@@ -8,7 +8,6 @@ import java.util.Map;
 
 public class State {
 	public int[][] config = new int[3][3];
-	private LastMove lastMove;
 	private static Map<String, State> hash = new HashMap<>();
 
 	public static List<State> newState(State oldState) {
@@ -19,7 +18,7 @@ public class State {
 			for (int j = 0; j < 3; j++) {
 				if (oldState.config[i][j] == 0) {
 					
-					if ((i - 1 >= 0 && oldState.lastMove == null) || (i - 1 >= 0 && oldState.lastMove != LastMove.DOWN)) {
+					if (i - 1 >= 0) {
 						
 						int value = oldState.config[i - 1][j];
 
@@ -40,7 +39,7 @@ public class State {
 						novosEstados.add(s);
 					}
 
-					if ((i + 1 <= 2 && oldState.lastMove == null) || (i + 1 <= 2 && oldState.lastMove != LastMove.UP)) {
+					if (i + 1 <= 2) {
 						int value = oldState.config[i + 1][j];
 
 						State s = new State();
@@ -59,7 +58,7 @@ public class State {
 						novosEstados.add(s);
 					}
 
-					if ((j - 1 >= 0 && oldState.lastMove == null) || (j - 1 >= 0 && oldState.lastMove != LastMove.RIGHT)) {
+					if (j - 1 >= 0) {
 						int value = oldState.config[i][j - 1];
 
 						State s = new State();
@@ -78,7 +77,7 @@ public class State {
 						novosEstados.add(s);
 					}
 
-					if ((j + 1 <= 2 && oldState.lastMove == null) || (j + 1 <= 2 && oldState.lastMove != LastMove.LEFT)) {
+					if (j + 1 <= 2) {
 						int value = oldState.config[i][j + 1];
 
 						State s = new State();
@@ -153,9 +152,8 @@ public class State {
 			return true;
 		} else {
 			hash.put(this.toString(), this);
-		}
-		
-		return false;
+			return false;
+		}		
 	}
 	
 	public static void resetHash() {
