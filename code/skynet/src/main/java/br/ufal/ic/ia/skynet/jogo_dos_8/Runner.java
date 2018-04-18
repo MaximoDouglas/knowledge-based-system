@@ -1,5 +1,6 @@
 package br.ufal.ic.ia.skynet.jogo_dos_8;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
@@ -12,35 +13,39 @@ public class Runner {
 	public static void main(String[] args) {
 		State firstState = new State();
 
-		System.out.print("Configuração:	");
+		System.out.print("Configuração inicial:	");
 		System.out.print("[");
-		firstState.config = newConfig2();			
+		firstState.config = newConfig2();
 		System.out.print("]");
-
 		System.out.println("\n");
 
-		System.out.println("BFS: ");
-		BFS(firstState);
-		System.out.println();
+		if (solvable(firstState.config)) {
 
-		State.resetHash();
-		iCounter = 0;
-
-		System.out.println("DFS: ");
-		DFS(firstState);
-		System.out.println();
-
-		State.resetHash();
-		iCounter = 0;
-
-		while(!found) {
-			System.out.println("DFS iterativo - Limite inicial: "+ limite);
-			DFS_profundidade_iterativa(firstState);
+			System.out.println("BFS: ");
+			BFS(firstState);
 			System.out.println();
-			limite = limite + 1000;
+
 			State.resetHash();
 			iCounter = 0;
-			pCounter = 0;
+
+			System.out.println("DFS: ");
+			DFS(firstState);
+			System.out.println();
+
+			State.resetHash();
+			iCounter = 0;
+
+			while(!found) {
+				System.out.println("DFS iterativo - Limite inicial: "+ limite);
+				DFS_profundidade_iterativa(firstState);
+				System.out.println();
+				limite = limite + 1000;
+				State.resetHash();
+				iCounter = 0;
+				pCounter = 0;
+			}
+		} else {
+			System.out.println("Configuração insolúvel");
 		}
 	}
 
@@ -127,15 +132,15 @@ public class Runner {
 	public static int[][] newConfig2() {
 		int[][] config = new int[3][3];
 
-		config[0][0] = 5;
-		config[0][1] = 2;
-		config[0][2] = 8;
-		config[1][0] = 4;
-		config[1][1] = 1;
-		config[1][2] = 7;
-		config[2][0] = 0;
-		config[2][1] = 3;
-		config[2][2] = 6;
+		config[0][0] = 2;
+		config[0][1] = 8;
+		config[0][2] = 3;
+		config[1][0] = 1;
+		config[1][1] = 6;
+		config[1][2] = 4;
+		config[2][0] = 7;
+		config[2][1] = 0;
+		config[2][2] = 5;
 
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
@@ -145,6 +150,29 @@ public class Runner {
 
 		return config;
 
+	}
+
+	private static boolean solvable(int[][] config) {
+
+		List<Integer> lista = new ArrayList<>();
+
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+				lista.add(config[i][j]);
+			}
+		}
+
+		int counter = 0;
+
+		for (int i = 0; i < lista.size(); i++) {
+			for (int j = 0; j < lista.size(); j++) {
+				if (j > i && lista.get(i) != 0 && lista.get(j) != 0 && lista.get(i) > lista.get(j)) {
+					counter++;
+				}
+			}
+		}
+
+		return (counter%2 == 0);
 	}
 
 }
