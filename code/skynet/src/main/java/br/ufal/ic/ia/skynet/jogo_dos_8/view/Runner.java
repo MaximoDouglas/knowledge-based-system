@@ -16,11 +16,11 @@ public class Runner {
 
 		if (resolver.isSoluvable()) {
 			System.out.println("BFS: ");
-			System.out.println("	"+resolver.BFS());
+			System.out.println("Iterações:	"+resolver.BFS());
 			System.out.println();
 
 			System.out.println("DFS: ");
-			System.out.println("	"+resolver.DFS());
+			System.out.println("Iterações:	"+resolver.DFS());
 			System.out.println();
 
 			System.out.println("DFS Iterativo - Limite inicial: " + resolver.getLimit() + " - Taxa: " + resolver.getTaxa());
@@ -65,14 +65,14 @@ public class Runner {
 	public static int[][] newConfig2() {
 		int[][] config = new int[3][3];
 
-		config[0][0] = 5;
-		config[0][1] = 2;
-		config[0][2] = 8;
-		config[1][0] = 4;
-		config[1][1] = 1;
-		config[1][2] = 7;
-		config[2][0] = 0;
-		config[2][1] = 3;
+		config[0][0] = 2;
+		config[0][1] = 4;
+		config[0][2] = 0;
+		config[1][0] = 8;
+		config[1][1] = 5;
+		config[1][2] = 3;
+		config[2][0] = 1;
+		config[2][1] = 7;
 		config[2][2] = 6;
 
 		for (int i = 0; i < 3; i++) {
