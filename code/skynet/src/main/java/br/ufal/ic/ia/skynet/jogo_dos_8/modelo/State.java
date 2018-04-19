@@ -1,4 +1,4 @@
-package br.ufal.ic.ia.skynet.jogo_dos_8;
+package br.ufal.ic.ia.skynet.jogo_dos_8.modelo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,6 +10,10 @@ public class State {
 	public int[][] config = new int[3][3];
 	private static Map<String, State> hash = new HashMap<>();
 
+	public State(int[][] config){
+		this.config = config;
+	}
+	
 	public static List<State> newState(State oldState) {
 
 		List<State> novosEstados = new ArrayList<>();
@@ -22,7 +26,8 @@ public class State {
 						
 						int value = oldState.config[i - 1][j];
 
-						State s = new State();
+						int[][] config = new int[3][3];
+						State s = new State(config);
 
 						for (int l = 0; l < 3; l++) {
 							for (int k = 0; k < 3; k++) {
@@ -41,8 +46,9 @@ public class State {
 
 					if (i + 1 <= 2) {
 						int value = oldState.config[i + 1][j];
-
-						State s = new State();
+						
+						int[][] config = new int[3][3];
+						State s = new State(config);						
 
 						for (int l = 0; l < 3; l++) {
 							for (int k = 0; k < 3; k++) {
@@ -61,7 +67,8 @@ public class State {
 					if (j - 1 >= 0) {
 						int value = oldState.config[i][j - 1];
 
-						State s = new State();
+						int[][] config = new int[3][3];
+						State s = new State(config);
 
 						for (int l = 0; l < 3; l++) {
 							for (int k = 0; k < 3; k++) {
@@ -80,7 +87,8 @@ public class State {
 					if (j + 1 <= 2) {
 						int value = oldState.config[i][j + 1];
 
-						State s = new State();
+						int[][] config = new int[3][3];
+						State s = new State(config);
 
 						for (int l = 0; l < 3; l++) {
 							for (int k = 0; k < 3; k++) {
