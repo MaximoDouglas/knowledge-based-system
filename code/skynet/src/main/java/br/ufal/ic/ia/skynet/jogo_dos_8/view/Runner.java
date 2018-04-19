@@ -62,6 +62,7 @@ public class Runner {
 
 	}
 
+	//Lembrar sempre de configurar a VM com o parâmetro -Xss515m
 	public static int[][] newConfig2() {
 		int[][] config = new int[3][3];
 
