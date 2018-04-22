@@ -66,15 +66,15 @@ public class Runner {
 	public static int[][] newConfig2() {
 		int[][] config = new int[3][3];
 
-		config[0][0] = 2;
-		config[0][1] = 4;
-		config[0][2] = 0;
-		config[1][0] = 8;
+		config[0][0] = 1;
+		config[0][1] = 2;
+		config[0][2] = 3;
+		config[1][0] = 4;
 		config[1][1] = 5;
-		config[1][2] = 3;
-		config[2][0] = 1;
-		config[2][1] = 7;
-		config[2][2] = 6;
+		config[1][2] = 6;
+		config[2][0] = 7;
+		config[2][1] = 0;
+		config[2][2] = 8;
 
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
