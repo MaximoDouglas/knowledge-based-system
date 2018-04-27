@@ -6,21 +6,18 @@ import java.util.Stack;
 
 public class Resolver {
 
-	private int iCounter = 0;
 	private final int[][] initialConfiguration;
 	private State initialState;
 	private boolean found = false;
 	private int limite = 0;
 	private final int taxa = 1000;
-	private int pCounter = 0;
 	private int bfsReturn;
 	private int dfsReturn;
 	private int dfsReturnI;
-	private int dfsReturnP;
 
 	public Resolver (int[][] initialConfiguration){
 		this.initialConfiguration = initialConfiguration;
-		this.initialState = new State(initialConfiguration);
+		this.initialState = new State(initialConfiguration, 0);
 	}
 
 	public int BFS() {
@@ -31,7 +28,6 @@ public class Resolver {
 		}
 
 		State.resetHash();
-		iCounter = 0;
 		
 		return bfsReturn;
 	}
@@ -47,11 +43,10 @@ public class Resolver {
 			if (!t.verifyState()) {
 				List<State> ts = State.newState(t);
 				ts.forEach(s -> {if (!s.exists()) {
-					iCounter++;
 					stack.push(s);}});
 
 			} else {
-				bfsReturn = iCounter;
+				bfsReturn = t.getHight();
 			}
 		}
 	}
@@ -64,7 +59,6 @@ public class Resolver {
 		}
 
 		State.resetHash();
-		iCounter = 0;
 		
 		return dfsReturn;
 	}
@@ -75,49 +69,35 @@ public class Resolver {
 
 			List<State> ts = State.newState(state);
 			ts.forEach(s -> {if (!s.exists()) {
-				iCounter++;
 				DFS(s);}});
 
 		} else {
-			dfsReturn = iCounter;
+			dfsReturn = state.getHight();
 		}
 	}
 
-	public int[] DFS_profundidade_iterativa() {
-		int[] retorno = new int[2];
+	public int DFS_profundidade_iterativa() {
 		
 		if (solvable(initialConfiguration)) {
 			while(!found) {
 				DFS_profundidade_iterativa(initialState);
 				limite = limite + taxa;
 				State.resetHash();
-				iCounter = 0;
-				pCounter = 0;
 			}
-		} else {
-			retorno[0] = -1;
-			return retorno;
 		}
 
-		retorno[0] = dfsReturnI;
-		retorno[1] = dfsReturnP;
-		return retorno;
+		return dfsReturnI;
 	}
 
 	private void DFS_profundidade_iterativa(State state) {
 
 		if (!state.verifyState()) {
 			List<State> ts = State.newState(state);
-			ts.forEach(s -> {if (!s.exists() && pCounter < limite) {
-				iCounter++;
-				pCounter++;
+			ts.forEach(s -> {if (!s.exists() && state.getHight() < limite) {
 				DFS_profundidade_iterativa(s);
-			} else if (pCounter == limite) {
-				pCounter--;
 			}});
 		} else {
-			dfsReturnP = pCounter;
-			dfsReturnI = iCounter;
+			dfsReturnI = state.getHight();
 			found = true;
 		}
 	}

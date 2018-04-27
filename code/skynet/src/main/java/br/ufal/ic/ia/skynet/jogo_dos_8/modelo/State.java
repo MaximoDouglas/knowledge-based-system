@@ -7,11 +7,19 @@ import java.util.List;
 import java.util.Map;
 
 public class State {
+	
+	private int hight;
+
+	public void setHight(int hight) {
+		this.hight = hight;
+	}
+
 	public int[][] config = new int[3][3];
 	private static Map<String, State> hash = new HashMap<>();
 
-	public State(int[][] config){
+	public State(int[][] config, int hight){
 		this.config = config;
+		this.hight = hight;
 	}
 	
 	public static List<State> newState(State oldState) {
@@ -27,7 +35,7 @@ public class State {
 						int value = oldState.config[i - 1][j];
 
 						int[][] config = new int[3][3];
-						State s = new State(config);
+						State s = new State(config, oldState.hight + 1);
 
 						for (int l = 0; l < 3; l++) {
 							for (int k = 0; k < 3; k++) {
@@ -48,7 +56,7 @@ public class State {
 						int value = oldState.config[i + 1][j];
 						
 						int[][] config = new int[3][3];
-						State s = new State(config);						
+						State s = new State(config, oldState.hight + 1);						
 
 						for (int l = 0; l < 3; l++) {
 							for (int k = 0; k < 3; k++) {
@@ -68,7 +76,7 @@ public class State {
 						int value = oldState.config[i][j - 1];
 
 						int[][] config = new int[3][3];
-						State s = new State(config);
+						State s = new State(config, oldState.hight + 1);
 
 						for (int l = 0; l < 3; l++) {
 							for (int k = 0; k < 3; k++) {
@@ -88,7 +96,7 @@ public class State {
 						int value = oldState.config[i][j + 1];
 
 						int[][] config = new int[3][3];
-						State s = new State(config);
+						State s = new State(config, oldState.hight + 1);
 
 						for (int l = 0; l < 3; l++) {
 							for (int k = 0; k < 3; k++) {
@@ -166,5 +174,10 @@ public class State {
 	
 	public static void resetHash() {
 		hash = new HashMap<>();
+	}
+	
+
+	public int getHight() {
+		return hight;
 	}
 }

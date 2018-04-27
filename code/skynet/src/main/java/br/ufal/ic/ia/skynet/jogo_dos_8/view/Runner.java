@@ -15,18 +15,16 @@ public class Runner {
 		Resolver resolver = new Resolver(config);
 
 		if (resolver.isSoluvable()) {
-			System.out.println("BFS: ");
-			System.out.println("Iterações:	"+resolver.BFS());
+			System.out.println("DFS: ");
+			System.out.println("Altura:	"+resolver.DFS());
 			System.out.println();
 
-			System.out.println("DFS: ");
-			System.out.println("Iterações:	"+resolver.DFS());
+			System.out.println("BFS: ");
+			System.out.println("Altura:	"+resolver.BFS());
 			System.out.println();
 
 			System.out.println("DFS Iterativo - Limite inicial: " + resolver.getLimit() + " - Taxa: " + resolver.getTaxa());
-			int[] dfs_i = resolver.DFS_profundidade_iterativa();
-			System.out.println("Profundidade:	"+dfs_i[1]);
-			System.out.println("Iterações:	"+dfs_i[0]);
+			System.out.println("Altura:	"+resolver.DFS_profundidade_iterativa());
 			System.out.println();
 		} else {
 			System.out.println("Configuração insolúvel.");
