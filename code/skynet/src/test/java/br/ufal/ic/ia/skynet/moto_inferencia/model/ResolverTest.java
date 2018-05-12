@@ -40,29 +40,43 @@ class ResolverTest {
 		
 	}
 	
+//	@Test
+//	void backWardTest() throws IOException {
+//		
+//		File rulesFile = new File("regras.txt");
+//		File factsFile = new File("fatos.txt");
+//		
+//		Resolver resolver = new Resolver(rulesFile, factsFile);
+//		
+//		List<String> expected = new ArrayList<String>();
+//		
+//		expected.add("nubla");
+//		expected.add("nao faz sol");
+//		expected.add("chove");
+//		expected.add("sono");
+//		expected.add("tempestade");
+//		expected.add("venta");
+//		
+//		List<String> actual = resolver.forwardResult();
+//		
+//		Collections.sort(expected);
+//		Collections.sort(actual);
+//		
+//		assertEquals(expected, actual);
+//		
+//	}
+	
 	@Test
-	void backWardTest() throws IOException {
+	void basicBackWardTest() throws IOException {
 		
-		File rulesFile = new File("regras.txt");
-		File factsFile = new File("fatos.txt");
+		File rulesFile = new File("regras - Copia.txt");
+		File factsFile = new File("fatos - Copia.txt");
 		
 		Resolver resolver = new Resolver(rulesFile, factsFile);
 		
-		List<String> expected = new ArrayList<String>();
+		String expected = "verdade";
 		
-		expected.add("nubla");
-		expected.add("nao faz sol");
-		expected.add("chove");
-		expected.add("sono");
-		expected.add("tempestade");
-		expected.add("venta");
-		
-		List<String> actual = resolver.forwardResult();
-		
-		Collections.sort(expected);
-		Collections.sort(actual);
-		
-		assertEquals(expected, actual);
+		assertEquals(expected, resolver.backwardResult("D"));
 		
 	}
 

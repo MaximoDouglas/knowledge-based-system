@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
+
+import br.ufal.ic.ia.skynet.motor_inferencia.view.Runner;
 
 public class Resolver {
 
@@ -18,6 +21,7 @@ public class Resolver {
 	private Map<String, List<String>> rulesHash;
 	private List<String> facts;
 	private List<String> leftList;
+	private List<String> falsifieds;
 
 	public Resolver(File rules, File facts) throws IOException {
 		rulesFile = rules;
@@ -28,6 +32,7 @@ public class Resolver {
 		this.rulesHash = new HashMap<String, List<String>>();
 		this.facts = new ArrayList<String>();
 		this.leftList = new ArrayList<String>();
+		this.falsifieds = new ArrayList<String>();
 
 		findRules();
 		findFacts();
@@ -35,7 +40,7 @@ public class Resolver {
 
 	private void findRules () throws IOException{
 
-		String rule = rulesReader.readLine();		
+		String rule = rulesReader.readLine();
 
 		while (rule != null) {
 			String[] sVector = rule.substring(3).split("ENTAO");
@@ -85,13 +90,13 @@ public class Resolver {
 				if (splited.length > 1) {
 					int qtd = splited.length;
 					int count = 0;
-					
+
 					for (int i = 0; i < splited.length; i++) {
 						if (facts.contains(splited[i].trim())) {
 							count++;
 						}
 					}
-					
+
 					if (count == qtd) {
 						for (String right : rulesHash.get(string)) {
 							if (!facts.contains(right)) {
@@ -119,7 +124,88 @@ public class Resolver {
 	}
 
 	public String backwardResult(String goal) {
-		return null;
+
+		Stack<String> toProve = new Stack<String>();
+
+		toProve.push(goal);
+
+		while(!toProve.isEmpty()) {
+			if (facts.contains(goal)) {
+				return "verdade";
+			}
+			
+			if (canIProveIt(toProve.peek())) {
+
+				String newFact = toProve.pop();
+				addNewFacts(newFact);
+
+			} else {
+				Stack<String> newStack = addInStack(toProve.peek(), toProve);
+
+				if (toProve.size() == newStack.size()) {
+					String stackTop = toProve.pop();
+
+					boolean isTrue = Runner.question(stackTop);
+					
+					if(isTrue) {
+						addNewFacts(stackTop);
+					} else {
+						falsifieds.add(stackTop);
+					}
+
+				} else {
+					toProve = newStack;
+				}
+			}
+		}
+
+		if (toProve.isEmpty() && facts.contains(goal)) {
+			return "verdade";
+		}
+
+		return "indefinido";
+	}
+
+	private boolean canIProveIt(String toProve) {
+
+		if (facts.contains(toProve)) {
+			return true;
+		} else {
+			for (String string : facts) {
+				if (rulesHash.containsKey(string) && rulesHash.get(string).contains(toProve)) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
+		
+	}
+
+	private void addNewFacts(String fact) {
+
+		if (!facts.contains(fact)) {
+			facts.add(fact);
+		}
+
+		if (rulesHash.containsKey(fact)) {
+			for (String string : rulesHash.get(fact)) {
+				if (!facts.contains(string)) {
+					facts.add(string);
+				}
+			}
+		}
+	}
+
+	private Stack<String> addInStack(String stackTop, Stack<String> stack){
+
+		for (String left : leftList) {
+			if (!falsifieds.contains(left) && rulesHash.get(left).contains(stackTop)) {
+				stack.push(left);
+			}
+		}
+
+		return stack;
 	}
 
 }
