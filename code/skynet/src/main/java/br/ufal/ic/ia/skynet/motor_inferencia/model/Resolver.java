@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import br.ufal.ic.ia.skynet.motor_inferencia.view.Runner;
+import br.ufal.ic.ia.skynet.motor_inferencia.view.Inference_runner;
 
 public class Resolver {
 
@@ -122,6 +122,65 @@ public class Resolver {
 
 		return facts;
 	}
+	
+	public List<String> forwardResultExplained(){
+
+		while(true) {
+			int c = 0;
+
+			for (String string : leftList) {
+				String[] splited = string.split("&");
+
+				if (splited.length > 1) {
+					int qtd = splited.length;
+					int count = 0;
+
+					for (int i = 0; i < splited.length; i++) {
+						if (facts.contains(splited[i].trim())) {
+							count++;
+						}
+					}
+
+					if (count == qtd) {
+						for (String right : rulesHash.get(string)) {
+							if (!facts.contains(right)) {
+								
+								for (int i = 0; i < splited.length; i++) {
+									System.out.print(splited[i]);
+									
+									if (i + 1 < splited.length) {
+										System.out.print("&");
+									} else {
+										System.out.print(" => ");
+									}
+								}
+								
+								System.out.print(right);
+								
+								System.out.println(" | This rule adds '" + right + "' to the facts.");
+								facts.add(right);
+								c++;
+							}
+						}
+					}
+				} else if (facts.contains(string)) {
+					for (String right : rulesHash.get(string)) {
+						if (!facts.contains(right)) {
+							System.out.println(string + " => " + right + " | This rule adds '" + right + "' to the facts.");
+							facts.add(right);
+							c++;
+						}
+					}
+				}
+			}
+
+			if (c == 0) {
+				break;
+			}
+		}
+		
+		return facts;
+	}
 
 	public String backwardResult(String goal) {
 
@@ -145,7 +204,7 @@ public class Resolver {
 				if (toProve.size() == newStack.size()) {
 					String stackTop = toProve.pop();
 
-					boolean isTrue = Runner.question(stackTop);
+					boolean isTrue = Inference_runner.question(stackTop);
 					
 					if(isTrue) {
 						addNewFacts(stackTop);

@@ -1,5 +1,0 @@
-SE chove ENTAO nao faz sol
-SE nubla ENTAO chove
-SE faz sol ENTAO praia
-SE chove & nubla ENTAO sono
-SE chove & nubla & sono ENTAO tempestade
