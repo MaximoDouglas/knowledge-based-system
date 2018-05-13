@@ -2,6 +2,7 @@ package br.ufal.ic.ia.skynet.motor_inferencia.view;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
@@ -31,12 +32,16 @@ public class Inference_runner {
 					opt = ler.nextInt();
 					
 					if (opt == 1) {
+						System.out.println();
 						System.out.println("Nova base de fatos:");
 						resolver.forwardResult().forEach(System.out::println);
 						System.out.println();
 					} else if (opt == 2) {
 						System.out.println("Forward com explicação: ");
-						resolver.forwardResultExplained().forEach(System.out::println);
+						List<String> base = resolver.forwardResultExplained();
+						System.out.println();
+						System.out.println("Nova base de fatos: ");
+						base.forEach(System.out::println);
 						System.out.println();
 					} else if (opt == 3) {
 						System.out.print("Qual a variável objetivo? ");
