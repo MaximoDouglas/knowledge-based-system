@@ -7,6 +7,7 @@ import br.ufal.ic.ia.skynet.jogo_dos_8.modelo.Resolver;
 public class Eight_puzzle_runner {
 
 	public static void main(String[] args) {
+		@SuppressWarnings("resource")
 		Scanner ler = new Scanner(System.in);
 
 		String initialConfig;

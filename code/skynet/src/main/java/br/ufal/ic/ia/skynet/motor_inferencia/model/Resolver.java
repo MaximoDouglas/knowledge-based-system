@@ -2,6 +2,7 @@ package br.ufal.ic.ia.skynet.motor_inferencia.model;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import br.ufal.ic.ia.skynet.exceptions.InvalidArgs;
 import br.ufal.ic.ia.skynet.motor_inferencia.view.Inference_runner;
 
 public class Resolver {
@@ -23,19 +25,30 @@ public class Resolver {
 	private List<String> leftList;
 	private List<String> falsifieds;
 
-	public Resolver(File rules, File facts) throws IOException {
+	public Resolver(File rules, File facts) throws InvalidArgs {
 		rulesFile = rules;
 		factsFile = facts;
+		
+		try {
+			rulesReader = new BufferedReader(new FileReader(rulesFile));
+			factsReader = new BufferedReader(new FileReader(factsFile));
+			this.rulesHash = new HashMap<String, List<String>>();
+			this.facts = new ArrayList<String>();
+			this.leftList = new ArrayList<String>();
+			this.falsifieds = new ArrayList<String>();
 
-		rulesReader = new BufferedReader(new FileReader(rulesFile));
-		factsReader = new BufferedReader(new FileReader(factsFile));
-		this.rulesHash = new HashMap<String, List<String>>();
-		this.facts = new ArrayList<String>();
-		this.leftList = new ArrayList<String>();
-		this.falsifieds = new ArrayList<String>();
-
-		findRules();
-		findFacts();
+			findRules();
+			findFacts();
+		} catch (FileNotFoundException e) {
+			
+			throw new InvalidArgs("Arquivo não encontrado.");
+			
+		} catch (IOException e) {
+			
+			throw new InvalidArgs("Arquivo não pôde ser aberto.");
+			
+		}
+		
 	}
 
 	private void findRules () throws IOException{
@@ -65,17 +78,28 @@ public class Resolver {
 
 	}
 
-	private void findFacts () throws IOException{
+	private void findFacts () throws InvalidArgs{
 
-		String fact = factsReader.readLine();		
-
-		while (fact != null) {
-			if (!facts.contains(fact)) {
-				facts.add(fact);	
+		String fact;
+		try {
+			
+			if (facts.isEmpty()) {
+				factsReader = new BufferedReader(new FileReader(factsFile));
 			}
-
+			
 			fact = factsReader.readLine();
-		}
+			while (fact != null) {
+				if (!facts.contains(fact)) {
+					facts.add(fact);	
+				}
+
+				fact = factsReader.readLine();
+			}
+		} catch (IOException e) {
+			throw new InvalidArgs("Erro de leitura de arquivo.");
+		}		
+
+		
 
 	}
 
