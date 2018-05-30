@@ -2,6 +2,7 @@ package br.ufal.ic.ia.skynet.motor_inferencia.view;
 
 import java.io.File;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import br.ufal.ic.ia.skynet.exceptions.InvalidArgs;
@@ -35,13 +36,15 @@ public class Inference_runner {
 
 			while (opt != 4) {
 				System.out.println("Menu: ");
-				System.out.println("1 - Forward");
+				System.out.println("1 - Forward"); 
 				System.out.println("2 - Forward with explanation");
 				System.out.println("3 - Backward");	
 				System.out.println("4 - Voltar");
-
-				opt = read.nextInt();
-
+				try {
+					opt = read.nextInt();
+				} catch (NoSuchElementException e) {
+					return;
+				}
 				if (opt == 1) {
 					System.out.println();
 					System.out.println("Nova base de fatos:");

@@ -28,27 +28,25 @@ public class Resolver {
 	public Resolver(File rules, File facts) throws InvalidArgs {
 		rulesFile = rules;
 		factsFile = facts;
-		
+
 		try {
 			rulesReader = new BufferedReader(new FileReader(rulesFile));
 			factsReader = new BufferedReader(new FileReader(factsFile));
 			this.rulesHash = new HashMap<String, List<String>>();
-			this.facts = new ArrayList<String>();
+			this.facts = new ArrayList<String>(); 
 			this.leftList = new ArrayList<String>();
 			this.falsifieds = new ArrayList<String>();
 
 			findRules();
 			findFacts();
 		} catch (FileNotFoundException e) {
-			
+
 			throw new InvalidArgs("Arquivo não encontrado.");
-			
+
 		} catch (IOException e) {
-			
 			throw new InvalidArgs("Arquivo não pôde ser aberto.");
-			
 		}
-		
+
 	}
 
 	private void findRules () throws IOException{
@@ -78,28 +76,26 @@ public class Resolver {
 
 	}
 
-	private void findFacts () throws InvalidArgs{
+	private void findFacts () throws InvalidArgs, IOException{
 
 		String fact;
-		try {
-			
-			if (facts.isEmpty()) {
-				factsReader = new BufferedReader(new FileReader(factsFile));
+
+
+		if (facts.isEmpty()) {
+			factsReader = new BufferedReader(new FileReader(factsFile));
+		}
+
+		fact = factsReader.readLine();
+		while (fact != null) {
+			if (!facts.contains(fact)) {
+				facts.add(fact);	
 			}
-			
+
 			fact = factsReader.readLine();
-			while (fact != null) {
-				if (!facts.contains(fact)) {
-					facts.add(fact);	
-				}
+		}
 
-				fact = factsReader.readLine();
-			}
-		} catch (IOException e) {
-			throw new InvalidArgs("Erro de leitura de arquivo.");
-		}		
 
-		
+
 
 	}
 
@@ -146,7 +142,7 @@ public class Resolver {
 
 		return facts;
 	}
-	
+
 	public List<String> forwardResultExplained(){
 
 		while(true) {
@@ -168,19 +164,19 @@ public class Resolver {
 					if (count == qtd) {
 						for (String right : rulesHash.get(string)) {
 							if (!facts.contains(right)) {
-								
+
 								for (int i = 0; i < splited.length; i++) {
 									System.out.print(splited[i]);
-									
+
 									if (i + 1 < splited.length) {
 										System.out.print("&");
 									} else {
 										System.out.print(" => ");
 									}
 								}
-								
+
 								System.out.print(right);
-								
+
 								System.out.println(" | This rule adds '" + right + "' to the facts.");
 								facts.add(right);
 								c++;
@@ -202,7 +198,7 @@ public class Resolver {
 				break;
 			}
 		}
-		
+
 		return facts;
 	}
 
@@ -216,7 +212,7 @@ public class Resolver {
 			if (facts.contains(goal)) {
 				return "verdade";
 			}
-			
+
 			if (canIProveIt(toProve.peek())) {
 
 				String newFact = toProve.pop();
@@ -229,7 +225,7 @@ public class Resolver {
 					String stackTop = toProve.pop();
 
 					boolean isTrue = Inference_runner.question(stackTop);
-					
+
 					if(isTrue) {
 						addNewFacts(stackTop);
 					} else {
@@ -260,9 +256,9 @@ public class Resolver {
 				}
 			}
 		}
-		
+
 		return false;
-		
+
 	}
 
 	private void addNewFacts(String fact) {

@@ -3,3 +3,4 @@ SE nubla ENTAO chove
 SE faz sol ENTAO praia
 SE chove & nubla ENTAO sono
 SE chove & nubla & sono ENTAO tempestade
+SE faz sol ENTAO nao chove
