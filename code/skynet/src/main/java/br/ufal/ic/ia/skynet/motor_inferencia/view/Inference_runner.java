@@ -74,6 +74,7 @@ public class Inference_runner {
 		} else {
 			throw new InvalidArgs("Um ou mais arquivos não foram passados na execução do programa.");
 		}
+		
 	}
 
 	public static boolean question (String object) {

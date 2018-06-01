@@ -34,16 +34,20 @@
 			<artifactId>commons-io</artifactId>
 			<version>1.3.2</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
-			<version>4.3.10.Final</version>
+			<version>5.2.17.Final</version>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>5.1.24</version>
+			<version>6.0.6</version>
 		</dependency>
+
 
 
 	</dependencies>
@@ -56,11 +60,13 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>br.ufal.ic.ia.skynet.motor_inferencia.view.Inference_runner</mainClass>
+							<!-- <mainClass>br.ufal.ic.ia.skynet.motor_inferencia.view.Inference_runner</mainClass> -->
+							<mainClass>br.ufal.ic.ia.skynet.jogo_dos_8.view.Eight_puzzle_runner</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
 			</plugin>
+
 		</plugins>
 	</build>
 </project>
