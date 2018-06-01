@@ -17,7 +17,7 @@ public class Inference_runner {
 	}
 
 	public static void setRead(Scanner read) {
-		Inference_runner.read = read;
+		Inference_runner.read = read; 
 	}
 
 	public static void main(String[] args) throws InvalidArgs {
