@@ -4,10 +4,11 @@ import java.awt.GridBagLayout;
 import java.awt.TrayIcon.MessageType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import br.ufal.ic.ia.skynet.exceptions.UnsovableException;
@@ -35,10 +36,20 @@ public class EightPuzzlePanel extends JFrame {
 		sequenceTxt = new JTextField();
 		sequenceTxt.setColumns(6);
 		
-		add(sequenceTxt);
-		add(executar);
-		add(voltar);
+		JPanel painelTxt = new JPanel();
+		painelTxt.add(sequenceTxt);
 		
+		JPanel painelBotoes = new JPanel();
+		painelBotoes.add(executar);
+		painelBotoes.add(voltar);
+		
+		JPanel painelPrincipal = new JPanel();
+		painelPrincipal.setLayout(new BoxLayout(painelPrincipal, BoxLayout.Y_AXIS));
+		
+		painelPrincipal.add(painelTxt);
+		painelPrincipal.add(painelBotoes);
+		
+		add(painelPrincipal);
 		setLayout(new GridBagLayout());
 		setResizable(true);
 		setLocationRelativeTo(null);
