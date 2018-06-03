@@ -64,16 +64,20 @@ public class EightPuzzlePanel extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() == executar) {
 				if (sequenceTxt.getText().length() == 9) {
-					if (EightPuzzleController.isSoluvable(sequenceTxt.getText())) {
-						try {
-							EightPuzzleController controller = new EightPuzzleController(sequenceTxt.getText());
-							
-							JOptionPane.showMessageDialog(null, "Profundidade BFS: " + controller.bfs() + "\nProfundidade DFS: " + controller.dfs() + "\nProfundidade DFS Iterativo: " + controller.dfsIterativo(), "Resultados", MessageType.WARNING.ordinal());
-							
-						} catch (UnsovableException e1) {
+					try {
+						if (EightPuzzleController.isSoluvable(sequenceTxt.getText())) {
+							try {
+								EightPuzzleController controller = new EightPuzzleController(sequenceTxt.getText());
+								
+								JOptionPane.showMessageDialog(null, "Profundidade BFS: " + controller.bfs() + "\nProfundidade DFS: " + controller.dfs() + "\nProfundidade DFS Iterativo: " + controller.dfsIterativo(), "Resultados", MessageType.WARNING.ordinal());
+								
+							} catch (UnsovableException e1) {
+								JOptionPane.showMessageDialog(null, "Sequência insolúvel. Tente novamente. \nOs 9 números devem estar num intervalo entre 0 e 8 e não podem haver elementos repetidos", "Sequência insolúvel", MessageType.WARNING.ordinal());
+							}
+						} else {
 							JOptionPane.showMessageDialog(null, "Sequência insolúvel. Tente novamente. \nOs 9 números devem estar num intervalo entre 0 e 8 e não podem haver elementos repetidos", "Sequência insolúvel", MessageType.WARNING.ordinal());
 						}
-					} else {
+					} catch (UnsovableException e1) {
 						JOptionPane.showMessageDialog(null, "Sequência insolúvel. Tente novamente. \nOs 9 números devem estar num intervalo entre 0 e 8 e não podem haver elementos repetidos", "Sequência insolúvel", MessageType.WARNING.ordinal());
 					}
 				} else {
