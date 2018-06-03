@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+import br.ufal.ic.ia.skynet.exceptions.UnsovableException;
 import br.ufal.ic.ia.skynet.jogo_dos_8.view.EightPuzzleController;
 
 @SuppressWarnings("serial")
@@ -53,7 +54,14 @@ public class EightPuzzlePanel extends JFrame {
 			if (e.getSource() == executar) {
 				if (sequenceTxt.getText().length() == 9) {
 					if (EightPuzzleController.isSoluvable(sequenceTxt.getText())) {
-						
+						try {
+							EightPuzzleController controller = new EightPuzzleController(sequenceTxt.getText());
+							
+							JOptionPane.showMessageDialog(null, "Profundidade BFS: " + controller.bfs() + "\nProfundidade DFS: " + controller.dfs() + "\nProfundidade DFS Iterativo: " + controller.dfsIterativo(), "Resultados", MessageType.WARNING.ordinal());
+							
+						} catch (UnsovableException e1) {
+							JOptionPane.showMessageDialog(null, "Sequência insolúvel. Tente novamente. \nOs 9 números devem estar num intervalo entre 0 e 8 e não podem haver elementos repetidos", "Sequência insolúvel", MessageType.WARNING.ordinal());
+						}
 					} else {
 						JOptionPane.showMessageDialog(null, "Sequência insolúvel. Tente novamente. \nOs 9 números devem estar num intervalo entre 0 e 8 e não podem haver elementos repetidos", "Sequência insolúvel", MessageType.WARNING.ordinal());
 					}

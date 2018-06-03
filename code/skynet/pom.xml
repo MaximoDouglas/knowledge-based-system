@@ -5,7 +5,7 @@
 
 	<groupId>br.ufal.ic.ia</groupId>
 	<artifactId>skynet</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.1</version>
 
 	<name>skynet</name>
 	<url>http://maven.apache.org</url>
@@ -60,8 +60,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<!-- <mainClass>br.ufal.ic.ia.skynet.motor_inferencia.view.Inference_runner</mainClass> -->
-							<mainClass>br.ufal.ic.ia.skynet.jogo_dos_8.view.Eight_puzzle_runner</mainClass>
+							<mainClass>br.ufal.ic.ia.skynet.view.App</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
