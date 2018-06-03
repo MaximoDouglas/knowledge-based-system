@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import br.ufal.ic.ia.skynet.exceptions.UnsovableException;
-import br.ufal.ic.ia.skynet.jogo_dos_8.view.EightPuzzleController;
+import br.ufal.ic.ia.skynet.jogo_dos_8.controller.EightPuzzleController;
 
 @SuppressWarnings("serial")
 public class EightPuzzlePanel extends JFrame {
@@ -22,7 +22,7 @@ public class EightPuzzlePanel extends JFrame {
 	private JFrame mainMenu;
 
 	public EightPuzzlePanel(JFrame mainMenu) {
-		super("Skynet");
+		super("Jogo dos 8");
 		this.mainMenu = mainMenu;
 		
 		MainMenuHandler handler = new MainMenuHandler();

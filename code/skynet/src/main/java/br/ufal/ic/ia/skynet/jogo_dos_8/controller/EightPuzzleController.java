@@ -1,4 +1,4 @@
-package br.ufal.ic.ia.skynet.jogo_dos_8.view;
+package br.ufal.ic.ia.skynet.jogo_dos_8.controller;
 
 import java.util.ArrayList;
 import java.util.List;
