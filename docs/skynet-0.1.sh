@@ -1,0 +1,1 @@
+java -Xss515m -jar skynet-0.1.jar
