@@ -16,14 +16,12 @@ public class MainPanel extends JFrame {
 
 	private JButton executar, sair;
 	private JRadioButton eightPuzzle, inferenceMotor;
-	private String[] args;
 	private MainPanel instante;
 
-	public MainPanel(String[] args) {
+	public MainPanel() {
 		super("Skynet");
 
 		this.instante = this;
-		this.args = args;
 		MainMenuHandler handler = new MainMenuHandler();
 		
 		eightPuzzle = new JRadioButton("Jogo dos 8");
@@ -76,7 +74,7 @@ public class MainPanel extends JFrame {
 					new EightPuzzlePanel(instante);
 				} else if (inferenceMotor.isSelected()) {
 					setVisible(false);
-					new InferenceMotorPanel(args, instante);
+					new InferenceMotorPanel(instante);
 				} else {
 					JOptionPane.showMessageDialog(null, "Selecione ao menos uma opção.");
 				}

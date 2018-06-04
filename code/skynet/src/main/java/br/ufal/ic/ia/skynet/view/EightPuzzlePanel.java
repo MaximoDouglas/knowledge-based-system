@@ -25,7 +25,7 @@ public class EightPuzzlePanel extends JFrame {
 		super("Jogo dos 8");
 		this.mainMenu = mainMenu;
 		
-		MainMenuHandler handler = new MainMenuHandler();
+		EightPuzzleHandler handler = new EightPuzzleHandler();
 		
 		executar = new JButton("Executar");
 		executar.addActionListener(handler);
@@ -58,7 +58,7 @@ public class EightPuzzlePanel extends JFrame {
 		setVisible(true);
 	}
 
-	public class MainMenuHandler implements ActionListener {
+	public class EightPuzzleHandler implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
