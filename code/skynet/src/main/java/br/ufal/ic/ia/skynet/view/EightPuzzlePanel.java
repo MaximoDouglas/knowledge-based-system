@@ -51,14 +51,14 @@ public class EightPuzzlePanel extends JFrame {
 		
 		add(painelPrincipal);
 		setLayout(new GridBagLayout());
-		setResizable(true);
+		setResizable(false);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(500,200);
 		setVisible(true);
 	}
 
-	public class EightPuzzleHandler implements ActionListener {
+	private class EightPuzzleHandler implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {

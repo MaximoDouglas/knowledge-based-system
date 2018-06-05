@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Stack;
 
 import br.ufal.ic.ia.skynet.exceptions.InvalidArgs;
-import br.ufal.ic.ia.skynet.motor_inferencia.view.Inference_runner;
+import br.ufal.ic.ia.skynet.motor_inferencia.view.InferenceController;
 
 public class Resolver {
 
@@ -224,7 +224,8 @@ public class Resolver {
 				if (toProve.size() == newStack.size()) {
 					String stackTop = toProve.pop();
 
-					boolean isTrue = Inference_runner.question(stackTop);
+					//TODO
+					boolean isTrue = (new InferenceController()).question(stackTop);
 
 					if(isTrue) {
 						addNewFacts(stackTop);

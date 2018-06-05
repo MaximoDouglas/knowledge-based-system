@@ -1,0 +1,145 @@
+package br.ufal.ic.ia.skynet.view;
+
+import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+
+import br.ufal.ic.ia.skynet.motor_inferencia.view.InferenceController;
+
+@SuppressWarnings("serial")
+public class ExemploPanel extends JFrame {
+	
+	private JButton executar, voltar;
+	private JRadioButton forward, forwardExplicacao, backward, consulta;
+	private JFrame backMenu, instance;
+	private InferenceController infController;
+	
+	public ExemploPanel(JFrame backMenu) {
+	
+		super("Exemplo - Funcionamento do motor");
+		
+		this.backMenu = backMenu;
+		this.instance = this;
+		this.infController = new InferenceController();
+		
+		InferenceMotorHandler handler = new InferenceMotorHandler();
+
+		forward = new JRadioButton("Forward");
+		forward.addActionListener(handler);
+		
+		forwardExplicacao = new JRadioButton("Forward com explicação");
+		forwardExplicacao.addActionListener(handler);
+		
+		backward = new JRadioButton("Backward");
+		backward.addActionListener(handler);
+		
+		consulta = new JRadioButton("Consulta");
+		consulta.addActionListener(handler);
+		
+		JPanel painelOpcoes = new JPanel();
+		painelOpcoes.add(forward);
+		painelOpcoes.add(forwardExplicacao);
+		painelOpcoes.add(backward);
+		painelOpcoes.add(consulta);
+		
+		executar = new JButton("Executar");
+		executar.addActionListener(handler);
+		voltar = new JButton("Voltar");
+		voltar.addActionListener(handler);
+		
+		JPanel painelBotoes = new JPanel();
+		painelBotoes.add(executar);
+		painelBotoes.add(voltar);
+		
+		JPanel painelPrincipal = new JPanel();
+		painelPrincipal.setLayout(new BoxLayout(painelPrincipal, BoxLayout.Y_AXIS));
+		painelPrincipal.add(painelOpcoes);
+		painelPrincipal.add(painelBotoes);
+		
+		add(painelPrincipal);
+		setLayout(new GridBagLayout());
+		setResizable(false);
+		setLocationRelativeTo(null);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setSize(500,200);
+		setVisible(true);
+
+	}
+
+	private class InferenceMotorHandler implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (e.getSource() == executar) {
+				if (forward.isSelected()) {
+					new RecomendacaoPanel(instance);
+				} else if (forwardExplicacao.isSelected()) {
+					new EdicaoPanel(instance);
+				} else if (backward.isSelected()) {
+					new ConsultasPanel(instance);
+				} else if (consulta.isSelected()) {
+					new ExemploPanel(instance);
+				} else {
+					JOptionPane.showMessageDialog(null, "Selecione ao menos uma opção.");
+				}
+			}
+			
+			if (e.getSource() == forward) {
+				if (forward.isSelected()) {
+					forwardExplicacao.setEnabled(false);
+					consulta.setEnabled(false);
+					backward.setEnabled(false);
+				} else {
+					forwardExplicacao.setEnabled(true);
+					consulta.setEnabled(true);
+					backward.setEnabled(true);
+				}
+			}
+			if (e.getSource() == forwardExplicacao) {
+				if (forwardExplicacao.isSelected()) {
+					forward.setEnabled(false);
+					consulta.setEnabled(false);
+					backward.setEnabled(false);
+				} else {
+					forward.setEnabled(true);
+					consulta.setEnabled(true);
+					backward.setEnabled(true);
+				}
+			}
+			if (e.getSource() == consulta) {
+				if (consulta.isSelected()) {
+					forwardExplicacao.setEnabled(false);
+					forward.setEnabled(false);
+					backward.setEnabled(false);
+				} else {
+					forwardExplicacao.setEnabled(true);
+					forward.setEnabled(true);
+					backward.setEnabled(true);
+				}
+			}
+			if (e.getSource() == backward) {
+				if (backward.isSelected()) {
+					forwardExplicacao.setEnabled(false);
+					consulta.setEnabled(false);
+					forward.setEnabled(false);
+				} else {
+					forwardExplicacao.setEnabled(true);
+					consulta.setEnabled(true);
+					forward.setEnabled(true);
+				}
+			}
+			if (e.getSource() == voltar) {
+				dispose();
+				backMenu.setVisible(true);
+			}
+		}
+
+	}
+}

@@ -57,14 +57,14 @@ public class MainPanel extends JFrame {
 		add(painelPrincipal);
 		
 		setLayout(new GridBagLayout());
-		setResizable(true);
+		setResizable(false);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(300,200);
 		setVisible(true);
 	}
 
-	public class MainMenuHandler implements ActionListener {
+	private class MainMenuHandler implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
