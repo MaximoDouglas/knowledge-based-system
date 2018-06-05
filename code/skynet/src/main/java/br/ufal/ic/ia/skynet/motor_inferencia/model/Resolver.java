@@ -40,7 +40,7 @@ public class Resolver {
 	}
 
 	public List<String> forwardResult() {
-
+		
 		while (true) {
 			int c = 0;
 
@@ -54,7 +54,7 @@ public class Resolver {
 
 					for (int i = 0; i < splited.length; i++) {
 						if (facts.contains(splited[i].trim())) {
-							count++;
+							count++;//2
 						}
 					}
 
@@ -80,7 +80,7 @@ public class Resolver {
 				break;
 			}
 		}
-
+		
 		return facts;
 	}
 

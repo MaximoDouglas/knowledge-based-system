@@ -61,7 +61,7 @@ public class InferenceMotorPanel extends JFrame {
 		setResizable(false);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(500,200);
+		setSize(800,200);
 		setVisible(true);
 
 	}

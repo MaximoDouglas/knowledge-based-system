@@ -18,6 +18,9 @@ public class InferenceController {
 	private RegraExemploDAO reDAO;
 	private FatoExemploDAO feDAO;
 	
+//	public static void main(String[] args) throws InvalidArgs {
+//		(new InferenceController()).forward().forEach(System.out::println);
+//	}
 
 	public InferenceController() throws InvalidArgs {
 		this.reDAO = DAOFactory.getFactory().getRegraExemploDAO();
@@ -96,22 +99,26 @@ public class InferenceController {
 		
 		facts.add("nubla");
 		facts.add("venta");
+		feDAO.beginTransaction();
 		
 		for (String string : facts) {
 			
 			FatoExemplo fato = new FatoExemplo();
 			fato.setDescricao(string);
 			
-			feDAO.beginTransaction();
 			feDAO.save(fato);
-			feDAO.commitTransaction();
+			
 		}
+		
+		feDAO.commitTransaction();
 		
 		List<String> factsReturn = new ArrayList<>();
 		
 		for (FatoExemplo fe : feDAO.listAll()) {
 			factsReturn.add(fe.getDescricao());
 		}
+		
+		factsReturn.forEach(System.out::println);
 		
 		return factsReturn;
 		
