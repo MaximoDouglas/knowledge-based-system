@@ -13,10 +13,7 @@ public class Celular {
 	
 	private String name;
 	
-	
-	public Celular() {
-		
-	}
+	public Celular() {}
 	
 	public Celular(String name) {
 		this.name = name;

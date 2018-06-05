@@ -30,5 +30,13 @@ public abstract class DAOFactory {
 	public abstract CelularDAO getCelularDAO();
 
 	public abstract FuncionalidadeDAO getFuncionalidadeDAO();
+	
+	public abstract RegraDAO getRegraDAO();
+	
+	public abstract RegraExemploDAO getRegraExemploDAO();
+	
+	public abstract FatoDAO getFatoDAO();
+	
+	public abstract FatoExemploDAO getFatoExemploDAO();
 
 }

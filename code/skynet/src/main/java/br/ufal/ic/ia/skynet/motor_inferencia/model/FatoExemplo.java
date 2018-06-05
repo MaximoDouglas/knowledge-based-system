@@ -5,18 +5,26 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-public class Funcionalidade {
+public class FatoExemplo {
 
 	@Id
 	@GeneratedValue
 	private int id;
 	
-	private String name;
+	private String descricao;
 	
-	public Funcionalidade() {}
+	public FatoExemplo(String descricao) {
+		this.descricao = descricao;
+	}
 	
-	public Funcionalidade(String name) {
-		this.name = name;
+	public FatoExemplo() {}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
 	}
 
 	public int getId() {
@@ -26,12 +34,5 @@ public class Funcionalidade {
 	public void setId(int id) {
 		this.id = id;
 	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}	
+	
 }

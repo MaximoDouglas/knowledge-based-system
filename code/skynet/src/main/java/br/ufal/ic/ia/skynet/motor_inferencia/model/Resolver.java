@@ -1,110 +1,51 @@
 package br.ufal.ic.ia.skynet.motor_inferencia.model;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
 import br.ufal.ic.ia.skynet.exceptions.InvalidArgs;
-import br.ufal.ic.ia.skynet.motor_inferencia.view.InferenceController;
+import br.ufal.ic.ia.skynet.motor_inferencia.controller.InferenceController;
 
 public class Resolver {
 
-	private File rulesFile;
-	private File factsFile;
-	private BufferedReader rulesReader;
-	private BufferedReader factsReader;
 	private Map<String, List<String>> rulesHash;
 	private List<String> facts;
 	private List<String> leftList;
 	private List<String> falsifieds;
 
-	public Resolver(File rules, File facts) throws InvalidArgs {
-		rulesFile = rules;
-		factsFile = facts;
+	public Resolver(Map<String, List<String>> rulesHash, List<String> facts) throws InvalidArgs {
+		this.rulesHash = rulesHash;
+		this.facts = facts;
 
-		try {
-			rulesReader = new BufferedReader(new FileReader(rulesFile));
-			factsReader = new BufferedReader(new FileReader(factsFile));
-			this.rulesHash = new HashMap<String, List<String>>();
-			this.facts = new ArrayList<String>(); 
-			this.leftList = new ArrayList<String>();
-			this.falsifieds = new ArrayList<String>();
-
-			findRules();
-			findFacts();
-		} catch (FileNotFoundException e) {
-
-			throw new InvalidArgs("Arquivo não encontrado.");
-
-		} catch (IOException e) {
-			throw new InvalidArgs("Arquivo não pôde ser aberto.");
-		}
-
+		this.leftList = makeLeft();
+		this.falsifieds = new ArrayList<String>();
 	}
 
-	private void findRules () throws IOException{
+	@SuppressWarnings("rawtypes")
+	private List<String> makeLeft() {
+		
+		List<String> lefts = new ArrayList<>();
+		
+		Iterator it = rulesHash.entrySet().iterator();
 
-		String rule = rulesReader.readLine();
-
-		while (rule != null) {
-			String[] sVector = rule.substring(3).split("ENTAO");
-
-			String left  = sVector[0].trim();
-			String right  = sVector[1].trim();
-
-			if (!rulesHash.containsKey(left)) {
-
-				List<String> values = new ArrayList<String>();
-				values.add(right);
-
-				rulesHash.put(left, values);
-				leftList.add(left);
-
-			} else {
-				rulesHash.get(left).add(right);
-			}
-
-			rule = rulesReader.readLine();
+		while (it.hasNext()) {
+			Map.Entry pair = (Map.Entry) it.next();
+			lefts.add(pair.getKey().toString().trim());
 		}
-
+		
+		return lefts;
 	}
 
-	private void findFacts () throws InvalidArgs, IOException{
+	public List<String> forwardResult() {
 
-		String fact;
-
-
-		if (facts.isEmpty()) {
-			factsReader = new BufferedReader(new FileReader(factsFile));
-		}
-
-		fact = factsReader.readLine();
-		while (fact != null) {
-			if (!facts.contains(fact)) {
-				facts.add(fact);	
-			}
-
-			fact = factsReader.readLine();
-		}
-
-
-
-
-	}
-
-	public List<String> forwardResult(){
-
-		while(true) {
+		while (true) {
 			int c = 0;
 
 			for (String string : leftList) {
+				
 				String[] splited = string.split("&");
 
 				if (splited.length > 1) {
@@ -143,9 +84,9 @@ public class Resolver {
 		return facts;
 	}
 
-	public List<String> forwardResultExplained(){
+	public List<String> forwardResultExplained() {
 
-		while(true) {
+		while (true) {
 			int c = 0;
 
 			for (String string : leftList) {
@@ -186,7 +127,8 @@ public class Resolver {
 				} else if (facts.contains(string)) {
 					for (String right : rulesHash.get(string)) {
 						if (!facts.contains(right)) {
-							System.out.println(string + " => " + right + " | This rule adds '" + right + "' to the facts.");
+							System.out.println(
+									string + " => " + right + " | This rule adds '" + right + "' to the facts.");
 							facts.add(right);
 							c++;
 						}
@@ -208,7 +150,7 @@ public class Resolver {
 
 		toProve.push(goal);
 
-		while(!toProve.isEmpty()) {
+		while (!toProve.isEmpty()) {
 			if (facts.contains(goal)) {
 				return "verdade";
 			}
@@ -224,10 +166,10 @@ public class Resolver {
 				if (toProve.size() == newStack.size()) {
 					String stackTop = toProve.pop();
 
-					//TODO
-					boolean isTrue = (new InferenceController()).question(stackTop);
+					// TODO
+					boolean isTrue = InferenceController.question(stackTop);
 
-					if(isTrue) {
+					if (isTrue) {
 						addNewFacts(stackTop);
 					} else {
 						falsifieds.add(stackTop);
@@ -277,7 +219,7 @@ public class Resolver {
 		}
 	}
 
-	private Stack<String> addInStack(String stackTop, Stack<String> stack){
+	private Stack<String> addInStack(String stackTop, Stack<String> stack) {
 
 		for (String left : leftList) {
 			if (!falsifieds.contains(left) && rulesHash.get(left).contains(stackTop)) {

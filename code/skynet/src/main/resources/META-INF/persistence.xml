@@ -13,9 +13,8 @@
    <properties>
     <!-- dados da conexao -->
      <property name="javax.persistence.jdbc.driver" 
-             value="com.mysql.jdbc.Driver" />
-    <property name="javax.persistence.jdbc.url" 
-            value="jdbc:mysql://localhost:3306/skynet" />
+             value="com.mysql.cj.jdbc.Driver" />
+    <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/skynet?serverTimezone=UTC" />
     <property name="javax.persistence.jdbc.user" 
             value="root" />
     <property name="javax.persistence.jdbc.password" 
@@ -24,8 +23,8 @@
      <!--  propriedades do hibernate -->
      <property name="hibernate.dialect" 
             value="org.hibernate.dialect.MySQL5InnoDBDialect" />
-    <property name="hibernate.show_sql" value="true" />
-    <property name="hibernate.format_sql" value="true" />
+    <property name="hibernate.show_sql" value="false" />
+    <property name="hibernate.format_sql" value="false" />
 
     <!--  atualiza o banco, gera as tabelas se for preciso -->
     <property name="hibernate.hbm2ddl.auto" value="create" />

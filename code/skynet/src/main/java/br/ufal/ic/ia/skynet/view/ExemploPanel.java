@@ -11,7 +11,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
-import br.ufal.ic.ia.skynet.motor_inferencia.view.InferenceController;
+import br.ufal.ic.ia.skynet.exceptions.InvalidArgs;
+import br.ufal.ic.ia.skynet.motor_inferencia.controller.InferenceController;
 
 @SuppressWarnings("serial")
 public class ExemploPanel extends JFrame {
@@ -27,7 +28,13 @@ public class ExemploPanel extends JFrame {
 		
 		this.backMenu = backMenu;
 		this.instance = this;
-		this.infController = new InferenceController();
+		try {
+			this.infController = new InferenceController();
+		} catch (InvalidArgs e) {
+			JOptionPane.showMessageDialog(null, "Algum erro ocorreu.");
+			dispose();
+			backMenu.setVisible(true);
+		}
 		
 		InferenceMotorHandler handler = new InferenceMotorHandler();
 

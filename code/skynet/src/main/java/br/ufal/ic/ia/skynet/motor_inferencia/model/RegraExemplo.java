@@ -5,15 +5,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-public class Regras {
+public class RegraExemplo {
 
 	@Id
 	@GeneratedValue
 	private int id;
 	
-	private String antescedente = "";
-	private String consequente = "";
-	private String regraCompleta = antescedente + " -> " + consequente;
+	private String antescedente;
+	private String consequente;
+	
+	public RegraExemplo() {}
 	
 	public int getId() {
 		return id;
@@ -38,12 +39,5 @@ public class Regras {
 	public void setConsequente(String consequente) {
 		this.consequente = consequente;
 	}
-
-	public String getRegraCompleta() {
-		return regraCompleta;
-	}
-
-	public void setRegraCompleta(String regraCompleta) {
-		this.regraCompleta = regraCompleta;
-	}
+	
 }
