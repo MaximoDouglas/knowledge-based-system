@@ -14,11 +14,11 @@
     <!-- dados da conexao -->
      <property name="javax.persistence.jdbc.driver" 
              value="com.mysql.cj.jdbc.Driver" />
-    <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/skynet?serverTimezone=UTC" />
+    <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/skynet" />
     <property name="javax.persistence.jdbc.user" 
             value="root" />
     <property name="javax.persistence.jdbc.password" 
-            value="L3g3nd4ry" />
+            value="" />
 
      <!--  propriedades do hibernate -->
      <property name="hibernate.dialect" 
