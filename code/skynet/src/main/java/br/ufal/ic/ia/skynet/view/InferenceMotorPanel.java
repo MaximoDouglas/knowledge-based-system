@@ -14,7 +14,7 @@ import javax.swing.JRadioButton;
 public class InferenceMotorPanel extends JFrame {
 	
 	private JButton executar, voltar;
-	private JRadioButton recomendacao, edicao, consultas, exemploInferencia;
+	private JRadioButton recomendacao, consultarRegras, exemploInferencia;
 	private JFrame mainMenu, instance;
 
 	public InferenceMotorPanel(JFrame mainMenu) {
@@ -27,19 +27,15 @@ public class InferenceMotorPanel extends JFrame {
 		recomendacao = new JRadioButton("Recomendação");
 		recomendacao.addActionListener(handler);
 		
-		edicao = new JRadioButton("Editar dados ou regras");
-		edicao.addActionListener(handler);
-		
-		consultas = new JRadioButton("Consultas");
-		consultas.addActionListener(handler);
+		consultarRegras = new JRadioButton("Consultar regras");
+		consultarRegras.addActionListener(handler);
 		
 		exemploInferencia = new JRadioButton("Exemplos");
 		exemploInferencia.addActionListener(handler);
 		
 		JPanel painelOpcoes = new JPanel();
 		painelOpcoes.add(recomendacao);
-		painelOpcoes.add(edicao);
-		painelOpcoes.add(consultas);
+		painelOpcoes.add(consultarRegras);
 		painelOpcoes.add(exemploInferencia);
 		
 		executar = new JButton("Executar");
@@ -74,12 +70,9 @@ public class InferenceMotorPanel extends JFrame {
 				if (recomendacao.isSelected()) {
 					setVisible(false);
 					new RecomendacaoPanel(instance);
-				} else if (edicao.isSelected()) {
+				} else if (consultarRegras.isSelected()) {
 					setVisible(false);
-					new EdicaoPanel(instance);
-				} else if (consultas.isSelected()) {
-					setVisible(false);
-					new ConsultasPanel(instance);
+					new consultarRegrasPanel(instance);
 				} else if (exemploInferencia.isSelected()) {
 					setVisible(false);
 					new ExemploPanel(instance);
@@ -90,45 +83,28 @@ public class InferenceMotorPanel extends JFrame {
 			
 			if (e.getSource() == recomendacao) {
 				if (recomendacao.isSelected()) {
-					edicao.setEnabled(false);
-					consultas.setEnabled(false);
+					consultarRegras.setEnabled(false);
 					exemploInferencia.setEnabled(false);
 				} else {
-					edicao.setEnabled(true);
-					consultas.setEnabled(true);
+					consultarRegras.setEnabled(true);
 					exemploInferencia.setEnabled(true);
 				}
 			}
-			if (e.getSource() == edicao) {
-				if (edicao.isSelected()) {
-					recomendacao.setEnabled(false);
-					consultas.setEnabled(false);
-					exemploInferencia.setEnabled(false);
-				} else {
-					recomendacao.setEnabled(true);
-					consultas.setEnabled(true);
-					exemploInferencia.setEnabled(true);
-				}
-			}
-			if (e.getSource() == consultas) {
-				if (consultas.isSelected()) {
-					edicao.setEnabled(false);
+			if (e.getSource() == consultarRegras) {
+				if (consultarRegras.isSelected()) {
 					recomendacao.setEnabled(false);
 					exemploInferencia.setEnabled(false);
 				} else {
-					edicao.setEnabled(true);
 					recomendacao.setEnabled(true);
 					exemploInferencia.setEnabled(true);
 				}
 			}
 			if (e.getSource() == exemploInferencia) {
 				if (exemploInferencia.isSelected()) {
-					edicao.setEnabled(false);
-					consultas.setEnabled(false);
+					consultarRegras.setEnabled(false);
 					recomendacao.setEnabled(false);
 				} else {
-					edicao.setEnabled(true);
-					consultas.setEnabled(true);
+					consultarRegras.setEnabled(true);
 					recomendacao.setEnabled(true);
 				}
 			}

@@ -70,7 +70,6 @@ public class Resolver {
 		this.rulesHash = rulesHash;
 		this.facts = facts;
 		this.explicacoes = new ArrayList<>();
-
 		this.leftList = makeLeft();
 		this.falsifieds = new ArrayList<String>();
 	}
@@ -200,8 +199,6 @@ public class Resolver {
 			}
 		}
 
-		explicacoes.forEach(p -> System.out.println(p.getKey() + " | " + p.getValue()));
-
 		return facts;
 	}
 
@@ -227,7 +224,6 @@ public class Resolver {
 				if (toProve.size() == newStack.size()) {
 					String stackTop = toProve.pop();
 
-					// TODO
 					boolean isTrue = InferenceController.question(stackTop);
 
 					if (isTrue) {

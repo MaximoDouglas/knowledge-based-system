@@ -10,8 +10,12 @@ import javax.swing.JOptionPane;
 import br.ufal.ic.ia.skynet.exceptions.InvalidArgs;
 import br.ufal.ic.ia.skynet.motor_inferencia.dao.DAOFactory;
 import br.ufal.ic.ia.skynet.motor_inferencia.dao.FatoExemploDAO;
+import br.ufal.ic.ia.skynet.motor_inferencia.dao.FuncionalidadeDAO;
+import br.ufal.ic.ia.skynet.motor_inferencia.dao.RegraDAO;
 import br.ufal.ic.ia.skynet.motor_inferencia.dao.RegraExemploDAO;
 import br.ufal.ic.ia.skynet.motor_inferencia.model.FatoExemplo;
+import br.ufal.ic.ia.skynet.motor_inferencia.model.Funcionalidade;
+import br.ufal.ic.ia.skynet.motor_inferencia.model.Regra;
 import br.ufal.ic.ia.skynet.motor_inferencia.model.RegraExemplo;
 import br.ufal.ic.ia.skynet.motor_inferencia.model.Resolver;
 import javafx.util.Pair;
@@ -22,6 +26,7 @@ public class InferenceController {
 	private Resolver resolver;
 	private RegraExemploDAO reDAO;
 	private FatoExemploDAO feDAO;
+	private RegraDAO rDAO;
 
 	public InferenceController() throws InvalidArgs {
 		this.reDAO = DAOFactory.getFactory().getRegraExemploDAO();
@@ -31,20 +36,6 @@ public class InferenceController {
 
 	public InferenceController(List<String> facts) throws InvalidArgs {
 		this.resolver = new Resolver(getRules(), setFacts(facts));
-	}
-
-	public List<String> forward() {
-		List<String> forwardResult = resolver.forwardResult();
-		return forwardResult;
-	}
-
-	public List<String> forwardExplained() {
-		List<String> forwardResult = resolver.forwardResultExplained();
-		return forwardResult;
-	}
-
-	public List<Pair<String, String>> getExplicacoes() {
-		return resolver.getExplicacoes();
 	}
 
 	private Map<String, List<String>> setRules() {
@@ -57,9 +48,52 @@ public class InferenceController {
 		listaRegras.add("chove & nubla & sono -> tempestade");
 		listaRegras.add("faz sol -> nao chove");
 
-		Map<String, List<String>> hash = makeHash(listaRegras);
+		Map<String, List<String>> hash = makeHashExemplo(listaRegras);
 
 		return hash;
+	}
+
+	private List<String> setFacts() {
+
+		List<String> facts = new ArrayList<>();
+
+		facts.add("nubla");
+		facts.add("venta");
+		feDAO.beginTransaction();
+
+		for (String string : facts) {
+
+			FatoExemplo fato = new FatoExemplo();
+			fato.setDescricao(string);
+
+			feDAO.save(fato);
+
+		}
+
+		feDAO.commitTransaction();
+
+		List<String> factsReturn = new ArrayList<>();
+
+		for (FatoExemplo fe : feDAO.listAll()) {
+			factsReturn.add(fe.getDescricao());
+		}
+
+		return factsReturn;
+
+	}
+
+	public List<String> forward() {
+		List<String> forwardResult = resolver.forwardResult();
+		return forwardResult;
+	}
+
+	public List<String> forwardExplained() {
+		List<String> forwardResult = resolver.forwardResultExplained();
+		return forwardResult;
+	}
+
+	public String backward(String goal) {
+		return resolver.backwardResult(goal);
 	}
 
 	public void wipeData() {
@@ -85,7 +119,7 @@ public class InferenceController {
 		}
 	}
 
-	private Map<String, List<String>> makeHash(List<String> listaRegras) {
+	private Map<String, List<String>> makeHashExemplo(List<String> listaRegras) {
 		Map<String, List<String>> hash = new HashMap<>();
 
 		reDAO.beginTransaction();
@@ -123,37 +157,75 @@ public class InferenceController {
 		return hash;
 	}
 
-	private List<String> setFacts() {
+	private Map<String, List<String>> makeHash(List<Regra> listaRegras) {
+		Map<String, List<String>> hash = new HashMap<>();
 
-		List<String> facts = new ArrayList<>();
+		rDAO.beginTransaction();
+		for (Regra regra : listaRegras) {
+			rDAO.save(regra);
+		}
+		rDAO.commitTransaction();
 
-		facts.add("nubla");
-		facts.add("venta");
-		feDAO.beginTransaction();
+		List<Regra> regras = rDAO.listAll();
 
-		for (String string : facts) {
+		for (Regra regra : regras) {
+			if (!hash.containsKey(regra.getAntecedente())) {
+				List<String> values = new ArrayList<>();
 
-			FatoExemplo fato = new FatoExemplo();
-			fato.setDescricao(string);
+				values.add(regra.getConsequente());
+				hash.put(regra.getAntecedente(), values);
+			} else {
+				List<String> values = hash.get(regra.getAntecedente());
 
-			feDAO.save(fato);
+				values.add(regra.getConsequente());
 
+				hash.remove(regra.getAntecedente());
+				hash.put(regra.getAntecedente(), values);
+			}
 		}
 
-		feDAO.commitTransaction();
-
-		List<String> factsReturn = new ArrayList<>();
-
-		for (FatoExemplo fe : feDAO.listAll()) {
-			factsReturn.add(fe.getDescricao());
-		}
-
-		return factsReturn;
-
+		return hash;
 	}
 
 	private Map<String, List<String>> getRules() {
-		return null;
+		List<Regra> listaRegras = new ArrayList<>();
+
+		listaRegras.add(new Regra("smartphone", "nokia n8"));
+		listaRegras.add(new Regra("smartphone", "blackberry q10"));
+		listaRegras.add(new Regra("smartphone", "xiaomi mi mix"));
+		listaRegras.add(new Regra("smartphone", "htc 10"));
+		listaRegras.add(new Regra("smartphone", "galaxy s3"));
+		listaRegras.add(new Regra("smartphone", "google pixel xl"));
+		listaRegras.add(new Regra("smartphone", "moto e2"));
+		listaRegras.add(new Regra("smartphone", "moto g4 play"));
+		listaRegras.add(new Regra("smartphone", "moto g4"));
+		listaRegras.add(new Regra("mp3", "siemens gs55-6"));
+		listaRegras.add(new Regra("mp3", "multilaser p3298"));
+		listaRegras.add(new Regra("colorido", "lg b220a"));
+		listaRegras.add(new Regra("multichip", "multilaser p3298"));
+		listaRegras.add(new Regra("4g", "moto e2"));
+		listaRegras.add(new Regra("4g", "moto g4 play"));
+		listaRegras.add(new Regra("4g", "moto g4"));
+		listaRegras.add(new Regra("flash", "xiaomi mi mix"));
+		listaRegras.add(new Regra("flash", "htc 10"));
+		listaRegras.add(new Regra("flash", "moto g4 play"));
+		listaRegras.add(new Regra("flash", "moto g4"));
+		listaRegras.add(new Regra("leitor biometrico", "moto g4"));
+		listaRegras.add(new Regra("camera frontal", "galaxy s3"));
+		listaRegras.add(new Regra("camera frontal", "google pixel xl"));
+		listaRegras.add(new Regra("tela hd", "google pixel xl"));
+		listaRegras.add(new Regra("giroscopio", "htc 10"));
+		listaRegras.add(new Regra("teclado fisico", "blackberry q10"));
+		
+		rDAO.beginTransaction();
+		
+		for (Regra regra : listaRegras) {
+			rDAO.save(regra);
+		}
+		
+		rDAO.commitTransaction();
+
+		return makeHash(rDAO.listAll());
 	}
 
 	private List<String> setFacts(List<String> facts) {
@@ -169,17 +241,13 @@ public class InferenceController {
 
 		return listaRetorno;
 	}
-	
+
 	public List<String> getVariaveis() {
 		List<String> listaRetorno = new ArrayList<>();
 
 		listaRetorno = resolver.getVariables();
 
 		return listaRetorno;
-	}
-	
-	public String backward(String goal) {
-		return resolver.backwardResult(goal);
 	}
 
 	public List<Pair<String, String>> getRulePairs() {
@@ -192,12 +260,61 @@ public class InferenceController {
 		return listaRetorno;
 	}
 
+	public List<Pair<String, String>> getExplicacoes() {
+		return resolver.getExplicacoes();
+	}
+
+	public static List<String> getFuncionalidades() {
+
+		List<String> retorno = new ArrayList<>();
+		FuncionalidadeDAO funcDAO = DAOFactory.getFactory().getFuncionalidadeDAO();
+		List<Funcionalidade> funcionalidades = funcDAO.listAll();
+
+		if (funcionalidades.isEmpty()) {
+			funcionalidades = fillFuncionalidades(funcDAO);
+		}
+
+		for (Funcionalidade funcionalidade : funcionalidades) {
+			retorno.add(funcionalidade.getName());
+		}
+
+		return retorno;
+	}
+
+	public static List<Funcionalidade> fillFuncionalidades(FuncionalidadeDAO funcDAO) {
+		
+		List<Funcionalidade> retorno = new ArrayList<>();
+
+		retorno.add(new Funcionalidade("smartphone"));
+		retorno.add(new Funcionalidade("mp3"));
+		retorno.add(new Funcionalidade("colorido"));
+		retorno.add(new Funcionalidade("multichip"));
+		retorno.add(new Funcionalidade("4g"));
+		retorno.add(new Funcionalidade("flash"));
+		retorno.add(new Funcionalidade("leitor biometrico"));
+		retorno.add(new Funcionalidade("camera frontal"));
+		retorno.add(new Funcionalidade("tela hd"));
+		retorno.add(new Funcionalidade("giroscopio"));
+		retorno.add(new Funcionalidade("teclado fisico"));
+		
+		funcDAO.beginTransaction();
+		
+		for (Funcionalidade funcionalidade : retorno) {
+			funcDAO.save(funcionalidade);
+		}
+		
+		funcDAO.commitTransaction();
+
+		return funcDAO.listAll();
+	}
+
 	public static boolean question(String top) {
 
 		String[] options = new String[] { "Sim", "Não" };
-		int response = JOptionPane.showOptionDialog(null, "A variável '"+top+"' é verdade?", "Questão", JOptionPane.DEFAULT_OPTION,
-				JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+		int response = JOptionPane.showOptionDialog(null, "A variável '" + top + "' é verdade?", "Questão",
+				JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
 
 		return response == 0;
 	}
+
 }

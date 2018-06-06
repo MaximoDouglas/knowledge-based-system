@@ -16,6 +16,11 @@ public class Regra {
 	
 	public Regra() {}
 	
+	public Regra(String antes, String cons) {
+		this.antescedente = antes;
+		this.consequente = cons;
+	}
+	
 	public int getId() {
 		return id;
 	}
