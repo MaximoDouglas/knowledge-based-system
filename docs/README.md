@@ -1,5 +1,5 @@
-# Skynet
-Repositório para controle de versão dos projetos de I.A. 1 do período de 2017.2.
+# Skynet - Leia-me
+Este repositório é utilizado para controle de versão dos projetos de IA_1 do período de 2017.2 desenvolvidos por Douglas H M Silva.
 
 Todos os passos de configuração e execução do projeto estão demonstrados no vídeo em: https://www.useloom.com/share/dd467f37665d4283b5e1f0240451aaee
 
