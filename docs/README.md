@@ -4,7 +4,7 @@ Este repositório é utilizado para controle de versão dos projetos desenvolvid
 Todos os passos de configuração e execução do projeto estão descritos aqui e, também são demonstrados no vídeo em: https://www.useloom.com/share/dd467f37665d4283b5e1f0240451aaee
 
 ## 1. Configurações
-### 1.1. Configuração do arquivo persistence.xlm.
+### 1.1. Configuração do arquivo persistence.xml.
 Este arquivo fica em \inteligenciaartificial\code\skynet\src\main\resources\META-INF. Nele, devem ser adicionadas as informações referentes ao banco de dados local de quem está executando. No mysql local, deve haver um banco criado com o nome "skynet". A senha e usuário devem ser configurados por quem está executando o projeto.
 
 ### 1.2. Após configurado o banco de dados, deve-se configurar a máquina virtual java local, pois o jogo dos 8 exige um tamanho de pilha muito grande.
