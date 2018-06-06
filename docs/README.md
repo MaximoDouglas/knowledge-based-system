@@ -1,5 +1,6 @@
 # Skynet
-Repositório para controle de versão dos projetos de I.A. 1 do período de 2017.2
+Repositório para controle de versão dos projetos de I.A. 1 do período de 2017.2.
+
 Todos os passos de configuração e execução do projeto estão demonstrados no vídeo em: https://www.useloom.com/share/dd467f37665d4283b5e1f0240451aaee
 
 ## 1. Configurações
