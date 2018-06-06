@@ -31,8 +31,8 @@ public class InferenceMotorPanel extends JFrame {
 		exemploInferencia.addActionListener(handler);
 		
 		JPanel painelOpcoes = new JPanel();
-		painelOpcoes.add(recomendacao);
 		painelOpcoes.add(exemploInferencia);
+		painelOpcoes.add(recomendacao);
 		
 		executar = new JButton("Executar");
 		executar.addActionListener(handler);

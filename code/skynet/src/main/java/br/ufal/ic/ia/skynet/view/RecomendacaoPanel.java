@@ -19,7 +19,7 @@ import br.ufal.ic.ia.skynet.exceptions.InvalidArgs;
 import br.ufal.ic.ia.skynet.motor_inferencia.controller.InferenceController;
 import javafx.util.Pair;
 
-@SuppressWarnings({ "serial", "restriction" })
+@SuppressWarnings({ "serial"})
 public class RecomendacaoPanel extends JFrame {
 
 	private JButton executar, voltar, consultar;
