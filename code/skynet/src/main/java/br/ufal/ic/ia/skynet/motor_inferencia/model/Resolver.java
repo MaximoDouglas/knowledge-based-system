@@ -10,6 +10,7 @@ import br.ufal.ic.ia.skynet.exceptions.InvalidArgs;
 import br.ufal.ic.ia.skynet.motor_inferencia.controller.InferenceController;
 import javafx.util.Pair;
 
+@SuppressWarnings("restriction")
 public class Resolver {
 
 	private Map<String, List<String>> rulesHash;
@@ -17,13 +18,52 @@ public class Resolver {
 	private List<String> leftList;
 	private List<String> falsifieds;
 	private List<Pair<String, String>> explicacoes;
-	
+
 	public List<Pair<String, String>> getExplicacoes() {
 		return explicacoes;
 	}
-	
+
 	public void setExplicacoes(List<Pair<String, String>> explicacoes) {
 		this.explicacoes = explicacoes;
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public List<String> getVariables() {
+		List<String> retorno = new ArrayList<>();
+
+		for (String left : leftList) {
+			if (left.contains("&")) {
+
+				String[] splited = left.split("&");
+
+				for (int i = 0; i < splited.length; i++) {
+
+					if (!retorno.contains(splited[i].trim())) {
+						retorno.add(splited[i].trim());
+					}
+				}
+			} else {
+				if (!retorno.contains(left.trim())) {
+					retorno.add(left.trim());
+				}
+			}
+		}
+
+		Iterator it = rulesHash.entrySet().iterator();
+
+		while (it.hasNext()) {
+			Map.Entry pair = (Map.Entry) it.next();
+
+			List<String> cons = (List<String>) pair.getValue();
+
+			for (String right : cons) {
+				if (!retorno.contains(right)) {
+					retorno.add(right);
+				}
+			}
+		}
+
+		return retorno;
 	}
 
 	public Resolver(Map<String, List<String>> rulesHash, List<String> facts) throws InvalidArgs {
@@ -37,26 +77,26 @@ public class Resolver {
 
 	@SuppressWarnings("rawtypes")
 	private List<String> makeLeft() {
-		
+
 		List<String> lefts = new ArrayList<>();
-		
+
 		Iterator it = rulesHash.entrySet().iterator();
 
 		while (it.hasNext()) {
 			Map.Entry pair = (Map.Entry) it.next();
 			lefts.add(pair.getKey().toString().trim());
 		}
-		
+
 		return lefts;
 	}
 
 	public List<String> forwardResult() {
-		
+
 		while (true) {
 			int c = 0;
 
 			for (String string : leftList) {
-				
+
 				String[] splited = string.split("&");
 
 				if (splited.length > 1) {
@@ -91,7 +131,7 @@ public class Resolver {
 				break;
 			}
 		}
-		
+
 		return facts;
 	}
 
@@ -102,7 +142,10 @@ public class Resolver {
 
 			for (String string : leftList) {
 				String[] splited = string.split("&");
-				
+
+				String regra = "";
+				String explicacao = "";
+
 				if (splited.length > 1) {
 					int qtd = splited.length;
 					int count = 0;
@@ -118,18 +161,18 @@ public class Resolver {
 							if (!facts.contains(right)) {
 
 								for (int i = 0; i < splited.length; i++) {
-									System.out.print(splited[i]);
+									regra += splited[i];
 
 									if (i + 1 < splited.length) {
-										System.out.print("&");
+										regra += " & ";
 									} else {
-										System.out.print(" -> ");
+										regra += " -> ";
 									}
 								}
 
-								System.out.print(right);
+								regra += right;
 
-								System.out.println(" | This rule adds '" + right + "' to the facts.");
+								explicacao += "This rule adds '" + right + "' to the facts.";
 								facts.add(right);
 								c++;
 							}
@@ -138,19 +181,26 @@ public class Resolver {
 				} else if (facts.contains(string)) {
 					for (String right : rulesHash.get(string)) {
 						if (!facts.contains(right)) {
-							System.out.println(
-									string + " -> " + right + " | This rule adds '" + right + "' to the facts.");
+							regra += string + " -> " + right;
+							explicacao += "This rule adds '" + right + "' to the facts.";
 							facts.add(right);
 							c++;
 						}
 					}
 				}
+
+				if (regra.length() != 0 && explicacao.length() != 0) {
+					explicacoes.add(new Pair<String, String>(regra, explicacao));
+				}
+
 			}
 
 			if (c == 0) {
 				break;
 			}
 		}
+
+		explicacoes.forEach(p -> System.out.println(p.getKey() + " | " + p.getValue()));
 
 		return facts;
 	}

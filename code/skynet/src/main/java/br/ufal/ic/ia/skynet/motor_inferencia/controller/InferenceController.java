@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.JOptionPane;
+
 import br.ufal.ic.ia.skynet.exceptions.InvalidArgs;
 import br.ufal.ic.ia.skynet.motor_inferencia.dao.DAOFactory;
 import br.ufal.ic.ia.skynet.motor_inferencia.dao.FatoExemploDAO;
@@ -14,6 +16,7 @@ import br.ufal.ic.ia.skynet.motor_inferencia.model.RegraExemplo;
 import br.ufal.ic.ia.skynet.motor_inferencia.model.Resolver;
 import javafx.util.Pair;
 
+@SuppressWarnings("restriction")
 public class InferenceController {
 
 	private Resolver resolver;
@@ -40,6 +43,10 @@ public class InferenceController {
 		return forwardResult;
 	}
 
+	public List<Pair<String, String>> getExplicacoes() {
+		return resolver.getExplicacoes();
+	}
+
 	private Map<String, List<String>> setRules() {
 		List<String> listaRegras = new ArrayList<>();
 
@@ -58,13 +65,13 @@ public class InferenceController {
 	public void wipeData() {
 
 		List<FatoExemplo> fes = feDAO.listAll();
-		
+
 		feDAO.beginTransaction();
 		for (FatoExemplo fatoExemplo : fes) {
 			feDAO.delete(fatoExemplo);
 		}
 		feDAO.commitTransaction();
-		
+
 		List<RegraExemplo> res = reDAO.listAll();
 
 		reDAO.beginTransaction();
@@ -72,7 +79,7 @@ public class InferenceController {
 			reDAO.delete(regraExemplo);
 		}
 		reDAO.commitTransaction();
-		
+
 		if (!resolver.getExplicacoes().isEmpty()) {
 			resolver.setExplicacoes(new ArrayList<>());
 		}
@@ -162,6 +169,18 @@ public class InferenceController {
 
 		return listaRetorno;
 	}
+	
+	public List<String> getVariaveis() {
+		List<String> listaRetorno = new ArrayList<>();
+
+		listaRetorno = resolver.getVariables();
+
+		return listaRetorno;
+	}
+	
+	public String backward(String goal) {
+		return resolver.backwardResult(goal);
+	}
 
 	public List<Pair<String, String>> getRulePairs() {
 		List<Pair<String, String>> listaRetorno = new ArrayList<>();
@@ -174,6 +193,11 @@ public class InferenceController {
 	}
 
 	public static boolean question(String top) {
-		return true;
+
+		String[] options = new String[] { "Sim", "Não" };
+		int response = JOptionPane.showOptionDialog(null, "A variável '"+top+"' é verdade?", "Questão", JOptionPane.DEFAULT_OPTION,
+				JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+
+		return response == 0;
 	}
 }
