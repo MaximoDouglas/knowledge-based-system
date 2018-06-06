@@ -8,6 +8,7 @@ import java.util.Stack;
 
 import br.ufal.ic.ia.skynet.exceptions.InvalidArgs;
 import br.ufal.ic.ia.skynet.motor_inferencia.controller.InferenceController;
+import javafx.util.Pair;
 
 public class Resolver {
 
@@ -15,10 +16,20 @@ public class Resolver {
 	private List<String> facts;
 	private List<String> leftList;
 	private List<String> falsifieds;
+	private List<Pair<String, String>> explicacoes;
+	
+	public List<Pair<String, String>> getExplicacoes() {
+		return explicacoes;
+	}
+	
+	public void setExplicacoes(List<Pair<String, String>> explicacoes) {
+		this.explicacoes = explicacoes;
+	}
 
 	public Resolver(Map<String, List<String>> rulesHash, List<String> facts) throws InvalidArgs {
 		this.rulesHash = rulesHash;
 		this.facts = facts;
+		this.explicacoes = new ArrayList<>();
 
 		this.leftList = makeLeft();
 		this.falsifieds = new ArrayList<String>();
@@ -54,7 +65,7 @@ public class Resolver {
 
 					for (int i = 0; i < splited.length; i++) {
 						if (facts.contains(splited[i].trim())) {
-							count++;//2
+							count++;
 						}
 					}
 
@@ -91,7 +102,7 @@ public class Resolver {
 
 			for (String string : leftList) {
 				String[] splited = string.split("&");
-
+				
 				if (splited.length > 1) {
 					int qtd = splited.length;
 					int count = 0;
@@ -112,7 +123,7 @@ public class Resolver {
 									if (i + 1 < splited.length) {
 										System.out.print("&");
 									} else {
-										System.out.print(" => ");
+										System.out.print(" -> ");
 									}
 								}
 
@@ -128,7 +139,7 @@ public class Resolver {
 					for (String right : rulesHash.get(string)) {
 						if (!facts.contains(right)) {
 							System.out.println(
-									string + " => " + right + " | This rule adds '" + right + "' to the facts.");
+									string + " -> " + right + " | This rule adds '" + right + "' to the facts.");
 							facts.add(right);
 							c++;
 						}

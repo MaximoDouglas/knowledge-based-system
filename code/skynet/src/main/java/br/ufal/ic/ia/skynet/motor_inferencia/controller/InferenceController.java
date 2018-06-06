@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import br.ufal.ic.ia.skynet.exceptions.InvalidArgs;
 import br.ufal.ic.ia.skynet.motor_inferencia.dao.DAOFactory;
 import br.ufal.ic.ia.skynet.motor_inferencia.dao.FatoExemploDAO;
@@ -11,34 +12,34 @@ import br.ufal.ic.ia.skynet.motor_inferencia.dao.RegraExemploDAO;
 import br.ufal.ic.ia.skynet.motor_inferencia.model.FatoExemplo;
 import br.ufal.ic.ia.skynet.motor_inferencia.model.RegraExemplo;
 import br.ufal.ic.ia.skynet.motor_inferencia.model.Resolver;
+import javafx.util.Pair;
 
 public class InferenceController {
 
 	private Resolver resolver;
 	private RegraExemploDAO reDAO;
 	private FatoExemploDAO feDAO;
-	
-//	public static void main(String[] args) throws InvalidArgs {
-//		(new InferenceController()).forward().forEach(System.out::println);
-//	}
 
 	public InferenceController() throws InvalidArgs {
 		this.reDAO = DAOFactory.getFactory().getRegraExemploDAO();
 		this.feDAO = DAOFactory.getFactory().getFatoExemploDAO();
 		this.resolver = new Resolver(setRules(), setFacts());
 	}
-	
 
 	public InferenceController(List<String> facts) throws InvalidArgs {
 		this.resolver = new Resolver(getRules(), setFacts(facts));
 	}
 
-
-	public List<String> forward(){
+	public List<String> forward() {
 		List<String> forwardResult = resolver.forwardResult();
 		return forwardResult;
 	}
-	
+
+	public List<String> forwardExplained() {
+		List<String> forwardResult = resolver.forwardResultExplained();
+		return forwardResult;
+	}
+
 	private Map<String, List<String>> setRules() {
 		List<String> listaRegras = new ArrayList<>();
 
@@ -54,9 +55,33 @@ public class InferenceController {
 		return hash;
 	}
 
+	public void wipeData() {
+
+		List<FatoExemplo> fes = feDAO.listAll();
+		
+		feDAO.beginTransaction();
+		for (FatoExemplo fatoExemplo : fes) {
+			feDAO.delete(fatoExemplo);
+		}
+		feDAO.commitTransaction();
+		
+		List<RegraExemplo> res = reDAO.listAll();
+
+		reDAO.beginTransaction();
+		for (RegraExemplo regraExemplo : res) {
+			reDAO.delete(regraExemplo);
+		}
+		reDAO.commitTransaction();
+		
+		if (!resolver.getExplicacoes().isEmpty()) {
+			resolver.setExplicacoes(new ArrayList<>());
+		}
+	}
+
 	private Map<String, List<String>> makeHash(List<String> listaRegras) {
 		Map<String, List<String>> hash = new HashMap<>();
 
+		reDAO.beginTransaction();
 		for (String string : listaRegras) {
 
 			String key = string.split("->")[0].trim();
@@ -66,10 +91,9 @@ public class InferenceController {
 			re.setAntecedente(key);
 			re.setConsequente(right);
 
-			reDAO.beginTransaction();
 			reDAO.save(re);
-			reDAO.commitTransaction();
 		}
+		reDAO.commitTransaction();
 
 		List<RegraExemplo> res = reDAO.listAll();
 
@@ -83,7 +107,7 @@ public class InferenceController {
 				List<String> values = hash.get(regraExemplo.getAntecedente());
 
 				values.add(regraExemplo.getConsequente());
-				
+
 				hash.remove(regraExemplo.getAntecedente());
 				hash.put(regraExemplo.getAntecedente(), values);
 			}
@@ -93,35 +117,32 @@ public class InferenceController {
 	}
 
 	private List<String> setFacts() {
-		
+
 		List<String> facts = new ArrayList<>();
-		
-		
+
 		facts.add("nubla");
 		facts.add("venta");
 		feDAO.beginTransaction();
-		
+
 		for (String string : facts) {
-			
+
 			FatoExemplo fato = new FatoExemplo();
 			fato.setDescricao(string);
-			
+
 			feDAO.save(fato);
-			
+
 		}
-		
+
 		feDAO.commitTransaction();
-		
+
 		List<String> factsReturn = new ArrayList<>();
-		
+
 		for (FatoExemplo fe : feDAO.listAll()) {
 			factsReturn.add(fe.getDescricao());
 		}
-		
-		factsReturn.forEach(System.out::println);
-		
+
 		return factsReturn;
-		
+
 	}
 
 	private Map<String, List<String>> getRules() {
@@ -130,6 +151,26 @@ public class InferenceController {
 
 	private List<String> setFacts(List<String> facts) {
 		return null;
+	}
+
+	public List<String> getFacts() {
+		List<String> listaRetorno = new ArrayList<>();
+
+		for (FatoExemplo fato : feDAO.listAll()) {
+			listaRetorno.add(fato.getDescricao());
+		}
+
+		return listaRetorno;
+	}
+
+	public List<Pair<String, String>> getRulePairs() {
+		List<Pair<String, String>> listaRetorno = new ArrayList<>();
+
+		for (RegraExemplo regra : reDAO.listAll()) {
+			listaRetorno.add(new Pair<String, String>(regra.getAntecedente(), regra.getConsequente()));
+		}
+
+		return listaRetorno;
 	}
 
 	public static boolean question(String top) {

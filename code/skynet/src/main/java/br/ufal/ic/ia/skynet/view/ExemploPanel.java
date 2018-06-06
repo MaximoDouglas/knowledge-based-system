@@ -1,7 +1,6 @@
 package br.ufal.ic.ia.skynet.view;
 
-import java.awt.GridBagLayout;
-import java.awt.TrayIcon.MessageType;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -17,41 +16,36 @@ import javax.swing.JTable;
 
 import br.ufal.ic.ia.skynet.exceptions.InvalidArgs;
 import br.ufal.ic.ia.skynet.motor_inferencia.controller.InferenceController;
+import javafx.util.Pair;
 
 @SuppressWarnings("serial")
 public class ExemploPanel extends JFrame {
 
 	private JButton executar, voltar;
 	private JRadioButton forward, forwardExplicacao, backward, consulta;
-	private JFrame backMenu, instance;
+	private JFrame backMenu;
 	private InferenceController infController;
+	private JPanel painelPrincipal;
 
 	public ExemploPanel(JFrame backMenu) {
 
 		super("Exemplo - Funcionamento do motor");
 
 		this.backMenu = backMenu;
-		this.instance = this;
-		try {
-			this.infController = new InferenceController();
-		} catch (InvalidArgs e) {
-			JOptionPane.showMessageDialog(null, "Algum erro ocorreu.");
-			dispose();
-			backMenu.setVisible(true);
-		}
+		this.painelPrincipal = new JPanel();
 
 		InferenceMotorHandler handler = new InferenceMotorHandler();
 
-		forward = new JRadioButton("Forward");
+		this.forward = new JRadioButton("Forward");
 		forward.addActionListener(handler);
 
-		forwardExplicacao = new JRadioButton("Forward com explicação");
+		this.forwardExplicacao = new JRadioButton("Forward com explicação");
 		forwardExplicacao.addActionListener(handler);
 
-		backward = new JRadioButton("Backward");
+		this.backward = new JRadioButton("Backward");
 		backward.addActionListener(handler);
 
-		consulta = new JRadioButton("Consulta");
+		this.consulta = new JRadioButton("Consulta");
 		consulta.addActionListener(handler);
 
 		JPanel painelOpcoes = new JPanel();
@@ -60,22 +54,21 @@ public class ExemploPanel extends JFrame {
 		painelOpcoes.add(backward);
 		painelOpcoes.add(consulta);
 
-		executar = new JButton("Executar");
+		this.executar = new JButton("Executar");
 		executar.addActionListener(handler);
-		voltar = new JButton("Voltar");
+		this.voltar = new JButton("Voltar");
 		voltar.addActionListener(handler);
 
 		JPanel painelBotoes = new JPanel();
 		painelBotoes.add(executar);
 		painelBotoes.add(voltar);
-
-		JPanel painelPrincipal = new JPanel();
+		
 		painelPrincipal.setLayout(new BoxLayout(painelPrincipal, BoxLayout.Y_AXIS));
 		painelPrincipal.add(painelOpcoes);
 		painelPrincipal.add(painelBotoes);
 
 		add(painelPrincipal);
-		setLayout(new GridBagLayout());
+		setLayout(new FlowLayout());
 		setResizable(true);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -83,9 +76,11 @@ public class ExemploPanel extends JFrame {
 		setVisible(true);
 
 	}
-
-	private void CreateAndShowTable(List<String> linhas) {
-		String[] colunas = { "Fatos" };
+	
+	private void CreateAndShowFactsTable(List<String> linhas, String sequence) {
+		JFrame telaTabelaFatos = new JFrame("Fatos");
+		
+		String[] colunas = { "Base de fatos - " + sequence};
 
 		JTable tabela;
 		String[][] linhasStr = new String[linhas.size()][1];
@@ -95,16 +90,55 @@ public class ExemploPanel extends JFrame {
 		for (String string : linhas) {
 			String[] str = {string};
 			linhasStr[i] = str;
-			i++;
+			i++;	
 		}
 		
 		tabela = new JTable(linhasStr, colunas);
-		
+		tabela.setEnabled(false);
 		JScrollPane barraRolagem = new JScrollPane(tabela);
+		
+		JPanel tabelaPanel = new JPanel();
+		tabelaPanel.add(barraRolagem);
+		
+		telaTabelaFatos.add(tabelaPanel);
+		telaTabelaFatos.setLayout(new FlowLayout());
+		telaTabelaFatos.setResizable(true);
+		telaTabelaFatos.setLocationRelativeTo(null);
+		telaTabelaFatos.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		telaTabelaFatos.setSize(500, 550);
+		telaTabelaFatos.setVisible(true);
+	}
+	
+	private void CreateAndShowRulesTable(List<Pair<String, String>> linhas) {
+		JFrame telaTabelaFatos = new JFrame("Regras");
+		
+		String[] colunas = { "Antecedente", "Consequente"};
 
-		add(barraRolagem);
-		barraRolagem.setVisible(true);
-
+		JTable tabela;
+		String[][] linhasStr = new String[linhas.size()][2];
+		
+		int i = 0;
+		
+		for (Pair<String, String> regra : linhas) {
+			String[] str = {regra.getKey(), regra.getValue()};
+			linhasStr[i] = str;
+			i++;	
+		}
+		
+		tabela = new JTable(linhasStr, colunas);
+		tabela.setEnabled(false);
+		JScrollPane barraRolagem = new JScrollPane(tabela);
+		
+		JPanel tabelaPanel = new JPanel();
+		tabelaPanel.add(barraRolagem);
+		
+		telaTabelaFatos.add(tabelaPanel);
+		telaTabelaFatos.setLayout(new FlowLayout());
+		telaTabelaFatos.setResizable(true);
+		telaTabelaFatos.setLocationRelativeTo(null);
+		telaTabelaFatos.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		telaTabelaFatos.setSize(500, 550);
+		telaTabelaFatos.setVisible(true);
 	}
 
 	private class InferenceMotorHandler implements ActionListener {
@@ -112,25 +146,35 @@ public class ExemploPanel extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() == executar) {
+				
+				try {
+					infController = new InferenceController();
+				} catch (InvalidArgs e1) {
+					JOptionPane.showMessageDialog(null, "Algum erro ocorreu.");
+					dispose();
+					backMenu.setVisible(true);
+				}
+				
 				if (forward.isSelected()) {
-
-					List<String> lista = infController.forward();
-
-//					String msg = "";
-//
-//					for (String string : lista) {
-//						msg += string + "\n";
-//					}
-//					JOptionPane.showMessageDialog(null, msg, "Resultado", MessageType.WARNING.ordinal());
-
-					CreateAndShowTable(lista);
+					CreateAndShowFactsTable(infController.getFacts(), "Antes");
+					CreateAndShowRulesTable(infController.getRulePairs());
 					
+					List<String> lista = infController.forward();
+					
+					CreateAndShowFactsTable(lista, "Depois");
+					infController.wipeData();
 				} else if (forwardExplicacao.isSelected()) {
-					new EdicaoPanel(instance);
+					CreateAndShowFactsTable(infController.getFacts(), "Antes");
+					CreateAndShowRulesTable(infController.getRulePairs());
+					
+					List<String> lista = infController.forwardExplained();
+
+					CreateAndShowFactsTable(lista, "Depois");
+					infController.wipeData();
 				} else if (backward.isSelected()) {
-					new ConsultasPanel(instance);
+					
 				} else if (consulta.isSelected()) {
-					new ExemploPanel(instance);
+					
 				} else {
 					JOptionPane.showMessageDialog(null, "Selecione ao menos uma opção.");
 				}
