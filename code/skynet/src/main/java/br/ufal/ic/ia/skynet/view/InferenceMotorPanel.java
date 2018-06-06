@@ -14,7 +14,7 @@ import javax.swing.JRadioButton;
 public class InferenceMotorPanel extends JFrame {
 	
 	private JButton executar, voltar;
-	private JRadioButton recomendacao, consultarRegras, exemploInferencia;
+	private JRadioButton recomendacao, exemploInferencia;
 	private JFrame mainMenu, instance;
 
 	public InferenceMotorPanel(JFrame mainMenu) {
@@ -27,15 +27,11 @@ public class InferenceMotorPanel extends JFrame {
 		recomendacao = new JRadioButton("Recomendação");
 		recomendacao.addActionListener(handler);
 		
-		consultarRegras = new JRadioButton("Consultar regras");
-		consultarRegras.addActionListener(handler);
-		
 		exemploInferencia = new JRadioButton("Exemplos");
 		exemploInferencia.addActionListener(handler);
 		
 		JPanel painelOpcoes = new JPanel();
 		painelOpcoes.add(recomendacao);
-		painelOpcoes.add(consultarRegras);
 		painelOpcoes.add(exemploInferencia);
 		
 		executar = new JButton("Executar");
@@ -70,9 +66,6 @@ public class InferenceMotorPanel extends JFrame {
 				if (recomendacao.isSelected()) {
 					setVisible(false);
 					new RecomendacaoPanel(instance);
-				} else if (consultarRegras.isSelected()) {
-					setVisible(false);
-					new consultarRegrasPanel(instance);
 				} else if (exemploInferencia.isSelected()) {
 					setVisible(false);
 					new ExemploPanel(instance);
@@ -80,31 +73,17 @@ public class InferenceMotorPanel extends JFrame {
 					JOptionPane.showMessageDialog(null, "Selecione ao menos uma opção.");
 				}
 			}
-			
 			if (e.getSource() == recomendacao) {
 				if (recomendacao.isSelected()) {
-					consultarRegras.setEnabled(false);
 					exemploInferencia.setEnabled(false);
 				} else {
-					consultarRegras.setEnabled(true);
-					exemploInferencia.setEnabled(true);
-				}
-			}
-			if (e.getSource() == consultarRegras) {
-				if (consultarRegras.isSelected()) {
-					recomendacao.setEnabled(false);
-					exemploInferencia.setEnabled(false);
-				} else {
-					recomendacao.setEnabled(true);
 					exemploInferencia.setEnabled(true);
 				}
 			}
 			if (e.getSource() == exemploInferencia) {
 				if (exemploInferencia.isSelected()) {
-					consultarRegras.setEnabled(false);
 					recomendacao.setEnabled(false);
 				} else {
-					consultarRegras.setEnabled(true);
 					recomendacao.setEnabled(true);
 				}
 			}

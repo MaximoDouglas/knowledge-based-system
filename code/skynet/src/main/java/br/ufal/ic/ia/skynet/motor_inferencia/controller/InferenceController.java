@@ -35,7 +35,8 @@ public class InferenceController {
 	}
 
 	public InferenceController(List<String> facts) throws InvalidArgs {
-		this.resolver = new Resolver(getRules(), setFacts(facts));
+		this.rDAO = DAOFactory.getFactory().getRegraDAO();
+		this.resolver = new Resolver(getRules(), facts);
 	}
 
 	private Map<String, List<String>> setRules() {
@@ -216,20 +217,16 @@ public class InferenceController {
 		listaRegras.add(new Regra("tela hd", "google pixel xl"));
 		listaRegras.add(new Regra("giroscopio", "htc 10"));
 		listaRegras.add(new Regra("teclado fisico", "blackberry q10"));
-		
+
 		rDAO.beginTransaction();
-		
+
 		for (Regra regra : listaRegras) {
 			rDAO.save(regra);
 		}
-		
+
 		rDAO.commitTransaction();
 
 		return makeHash(rDAO.listAll());
-	}
-
-	private List<String> setFacts(List<String> facts) {
-		return null;
 	}
 
 	public List<String> getFacts() {
@@ -260,6 +257,16 @@ public class InferenceController {
 		return listaRetorno;
 	}
 
+	public List<Pair<String, String>> getRulePairsOff() {
+		List<Pair<String, String>> listaRetorno = new ArrayList<>();
+
+		for (Regra regra : rDAO.listAll()) {
+			listaRetorno.add(new Pair<String, String>(regra.getAntecedente(), regra.getConsequente()));
+		}
+
+		return listaRetorno;
+	}
+
 	public List<Pair<String, String>> getExplicacoes() {
 		return resolver.getExplicacoes();
 	}
@@ -282,7 +289,7 @@ public class InferenceController {
 	}
 
 	public static List<Funcionalidade> fillFuncionalidades(FuncionalidadeDAO funcDAO) {
-		
+
 		List<Funcionalidade> retorno = new ArrayList<>();
 
 		retorno.add(new Funcionalidade("smartphone"));
@@ -296,13 +303,13 @@ public class InferenceController {
 		retorno.add(new Funcionalidade("tela hd"));
 		retorno.add(new Funcionalidade("giroscopio"));
 		retorno.add(new Funcionalidade("teclado fisico"));
-		
+
 		funcDAO.beginTransaction();
-		
+
 		for (Funcionalidade funcionalidade : retorno) {
 			funcDAO.save(funcionalidade);
 		}
-		
+
 		funcDAO.commitTransaction();
 
 		return funcDAO.listAll();

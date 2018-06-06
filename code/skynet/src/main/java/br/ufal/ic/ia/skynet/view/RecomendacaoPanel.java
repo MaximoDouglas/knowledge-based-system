@@ -17,11 +17,12 @@ import javax.swing.JScrollPane;
 
 import br.ufal.ic.ia.skynet.exceptions.InvalidArgs;
 import br.ufal.ic.ia.skynet.motor_inferencia.controller.InferenceController;
+import javafx.util.Pair;
 
-@SuppressWarnings("serial")
+@SuppressWarnings({ "serial", "restriction" })
 public class RecomendacaoPanel extends JFrame {
 
-	private JButton executar, voltar;
+	private JButton executar, voltar, consultar;
 	private InferenceController infController;
 	private List<JRadioButton> funcionalidades;
 	private RecomendacaoHandler handler;
@@ -34,6 +35,8 @@ public class RecomendacaoPanel extends JFrame {
 		this.backMenu = backMenu;
 		this.executar = new JButton("Executar");
 		executar.addActionListener(handler);
+		this.consultar = new JButton("Consultar regras");
+		consultar.addActionListener(handler);
 		this.voltar = new JButton("Voltar");
 		voltar.addActionListener(handler);
 
@@ -54,6 +57,7 @@ public class RecomendacaoPanel extends JFrame {
 
 		JPanel painelBotoes = new JPanel();
 		painelBotoes.add(executar);
+		painelBotoes.add(consultar);
 		painelBotoes.add(voltar);
 
 		JPanel painelPrincipal = new JPanel();
@@ -74,7 +78,7 @@ public class RecomendacaoPanel extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if (e.getSource() == executar) {
+			if (e.getSource() == executar || e.getSource() == consultar) {
 				List<String> funcSelecionadas = new ArrayList<>();
 
 				for (JRadioButton func : funcionalidades) {
@@ -82,23 +86,54 @@ public class RecomendacaoPanel extends JFrame {
 						funcSelecionadas.add(func.getText());
 					}
 				}
+				
+				try {
+					infController = new InferenceController(funcSelecionadas);	
+				} catch (InvalidArgs e1) {
+					JOptionPane.showMessageDialog(null, "Algum erro ocorreu.");
+					dispose();
+					backMenu.setVisible(true);
+				}
+				
+			if (e.getSource() == executar) {	
 
 				if (!funcSelecionadas.isEmpty()) {
-					try {
-						infController = new InferenceController(funcSelecionadas);
-						
+					
 						List<String> forwardResult = infController.forward();
-						
-					} catch (InvalidArgs e1) {
-						JOptionPane.showMessageDialog(null, "Algum erro ocorreu.");
-						dispose();
-						backMenu.setVisible(true);
-					}
+
+						List<String> func = new ArrayList<>();
+
+						for (JRadioButton funcionalidade : funcionalidades) {
+							func.add(funcionalidade.getText());
+						}
+
+						if (!func.isEmpty()) {
+							for (String cell : forwardResult) {
+								if (!func.contains(cell)) {
+									System.out.println(cell);
+								}
+							}
+						} else {
+							for (String cell : forwardResult) {
+								System.out.println(cell);
+							}
+						}
+
+					
 				} else {
-					JOptionPane.showMessageDialog(null, "Selecione ao menos uma opção", "Erro", MessageType.ERROR.ordinal());
+					JOptionPane.showMessageDialog(null, "Selecione ao menos uma opção", "Erro",
+							MessageType.ERROR.ordinal());
 				}
 			}
 
+			if (e.getSource() == consultar) {
+				List<Pair<String, String>> regras = infController.getRulePairsOff();
+				
+				for (Pair<String, String> pair : regras) {
+					System.out.println(pair.getKey()+" -> "+pair.getValue());
+				}
+			}
+			}
 			if (e.getSource() == voltar) {
 				dispose();
 				backMenu.setVisible(true);
