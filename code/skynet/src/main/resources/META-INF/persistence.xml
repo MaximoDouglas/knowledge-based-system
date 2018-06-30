@@ -9,6 +9,7 @@
 
    <!-- provedor/implementacao do JPA -->
    <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+   <shared-cache-mode>ALL</shared-cache-mode>
 
    <properties>
     <!-- dados da conexao -->
@@ -17,8 +18,6 @@
     <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/skynet" />
     <property name="javax.persistence.jdbc.user" 
             value="root" />
-    <property name="javax.persistence.jdbc.password" 
-            value="" />
 
      <!--  propriedades do hibernate -->
      <property name="hibernate.dialect" 

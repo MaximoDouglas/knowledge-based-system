@@ -10,7 +10,6 @@ import br.ufal.ic.ia.skynet.exceptions.InvalidArgs;
 import br.ufal.ic.ia.skynet.motor_inferencia.controller.InferenceController;
 import javafx.util.Pair;
 
-@SuppressWarnings("restriction")
 public class Resolver {
 
 	private Map<String, List<String>> rulesHash;

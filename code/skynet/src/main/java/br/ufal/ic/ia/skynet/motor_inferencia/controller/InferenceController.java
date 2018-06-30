@@ -20,7 +20,6 @@ import br.ufal.ic.ia.skynet.motor_inferencia.model.RegraExemplo;
 import br.ufal.ic.ia.skynet.motor_inferencia.model.Resolver;
 import javafx.util.Pair;
 
-@SuppressWarnings("restriction")
 public class InferenceController {
 
 	private Resolver resolver;
