@@ -3,7 +3,7 @@ package br.ufal.ic.ia2.minicity.model;
 public class City {
 
 	public static void main(String[] args) {
-		City cidade = new City();
+		new City();
 
 		for (int i = 0; i < cells.length; i++) {
 			for (int j = 0; j < cells[i].length; j++) {
