@@ -1,4 +1,4 @@
-# Skynet - Leia-me
+# Knowledge Based System - Leia-me
 Este repositório é utilizado para controle de versão dos projetos desenvolvidos por Douglas H M Silva, para a disciplina de Inteligência Artificial 1, no período de 2017.2.
 
 Todos os passos de configuração e execução do projeto estão descritos aqui e, também são demonstrados no vídeo em: https://www.useloom.com/share/dd467f37665d4283b5e1f0240451aaee
